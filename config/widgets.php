@@ -13,8 +13,8 @@ return [
         'published' => true,
         'class' => '\TailorSheet_Manager\Widgets\AppSheet_Functions_Explanation'
     ],
-    'tsm_appsheet_functions_list' => [
-        'published' => false,
-        'class' => '\TailorSheet_Manager\Widgets\AppSheet_Functions_List'
+    'tsm_post_list' => [
+        'published' => true,
+        'class' => '\TailorSheet_Manager\Widgets\Post_List'
     ]
 ];
