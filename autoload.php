@@ -1,28 +1,25 @@
 <?php
 
 spl_autoload_register(function ($class) {
-    // project-specific namespace prefix
-    $prefix = 'TailorSheet_Manager\\';
+    // Define namespace mappings
+    $prefixes = [
+        'TailorSheet_Manager\\' => TAILORSHEET_MANAGER_BASE_DIR . 'includes/',
+        'Twig\\' => TAILORSHEET_MANAGER_BASE_DIR . 'vendor/twig/src/', // Adjusted path for Twig source files
+    ];
 
-    // base directory for the namespace prefix
-    $base_dir = TAILORSHEET_MANAGER_BASE_DIR . 'includes/';
- 
-    // does the class use the namespace prefix?
-    $len = strlen($prefix);
-    if (strncmp($prefix, $class, $len) !== 0) {
-        // no, move to the next registered autoloader
-        return;
-    }
+    foreach ($prefixes as $prefix => $base_dir) {
+        // Check if the class uses the prefix
+        if (strncmp($prefix, $class, strlen($prefix)) === 0) {
+            // Remove the namespace prefix
+            $relative_class = substr($class, strlen($prefix));
 
-    // get the relative class name
-    $relative_class = substr($class, $len);
+            // Convert namespace separators to directory separators and append ".php"
+            $file = $base_dir . str_replace('\\', '/', $relative_class) . '.php';
 
-    // replace the namespace prefix with the base directory, replace namespace
-    // separators with directory separators in the relative class name, append
-    // with .php
-    $file = $base_dir . str_replace('\\', '/', $relative_class) . '.php';
-    // if the file exists, require it
-    if (file_exists($file)) {
-        require $file;
+            // Check if file exists before including
+            if (file_exists($file)) {
+                require $file;
+            }
+        }
     }
 });
