@@ -23,6 +23,24 @@ class Helpers
         echo Helpers::load_template($template_name, $data);
     }
 
+    static public function init_twig() {
+        $template_dir = TAILORSHEET_MANAGER_BASE_DIR . 'templates'; // Path to your Twig templates
+    
+        $loader = new \Twig\Loader\FilesystemLoader($template_dir);
+        $twig = new \Twig\Environment($loader, [
+            'debug' => true, // Enable debugging (set to false in production)
+            'cache' => TAILORSHEET_MANAGER_BASE_DIR . 'cache', // Optional: set a cache directory
+        ]);
+    
+        return $twig;
+    }
+
+    static public function render_twig_template($template_name, $data = array()) {
+        $twig = Helpers::init_twig();
+    
+        echo $twig->render($template_name, $data);
+    }
+
     static public function admin_assets($dir) 
     {
         return TAILORSHEET_MANAGER_BASE_URL . 'assets/admin/' . $dir;
