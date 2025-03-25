@@ -60,7 +60,7 @@ class Admin_Handler
          */
         
         wp_enqueue_style($this->plugin_name, Helpers::admin_assets('css/tailorsheet-manager-admin.css'), array(), $this->version, 'all');
-        wp_enqueue_style('select2-css', Helpers::admin_assets('css/select2-min.css'), array(), '4.1.0', 'all');
+        wp_enqueue_style('select2-css', Helpers::admin_assets('css/select2.min.css'), array(), '4.1.0', 'all');
     }
 
     /**
@@ -84,7 +84,7 @@ class Admin_Handler
          */
 
         wp_enqueue_script($this->plugin_name, Helpers::admin_assets('js/tailorsheet-manager-admin.js'), array( 'jquery' ), $this->version, false);
-        wp_enqueue_script('select2-js', Helpers::admin_assets('js/select2-min.js'), array('jquery'), '4.1.0', true);
+        wp_enqueue_script('select2-js', Helpers::admin_assets('js/select2.min.js'), array('jquery'), '4.1.0', true);
     }
 
     public function create_menu()
