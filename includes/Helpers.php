@@ -24,12 +24,11 @@ class Helpers
     }
 
     static public function init_twig() {
-        $template_dir = TAILORSHEET_MANAGER_BASE_DIR . 'templates'; // Path to your Twig templates
+        $template_dir = TAILORSHEET_MANAGER_BASE_DIR . 'tsm_templates'; // Path to your Twig templates
     
         $loader = new \Twig\Loader\FilesystemLoader($template_dir);
         $twig = new \Twig\Environment($loader, [
-            'debug' => true, // Enable debugging (set to false in production)
-            'cache' => TAILORSHEET_MANAGER_BASE_DIR . 'cache', // Optional: set a cache directory
+        //'cache' => TAILORSHEET_MANAGER_BASE_DIR . 'cache', // Optional: set a cache directory
         ]);
     
         return $twig;
