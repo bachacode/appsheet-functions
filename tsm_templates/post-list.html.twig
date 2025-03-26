@@ -1,0 +1,87 @@
+<style>
+	.tsm-container {
+		width: 100%;
+	}
+
+	@media (min-width: 640px) {
+		.tsm-container {
+			max-width: 640px;
+		}
+	}
+	@media (min-width: 768px) {
+		.tsm-container {
+			max-width: 768px;
+		}
+	}
+	@media (min-width: 1024px) {
+		.tsm-container {
+			max-width: 1024px;
+		}
+	}
+	@media (min-width: 1280px) {
+		.tsm-container {
+			max-width: 1280px;
+		}
+	}
+	@media (min-width: 1536px) {
+		.tsm-container {
+			max-width: 1536px;
+		}
+	}
+
+	.tsm-post-list__wrapper {
+		display: grid;
+		width: 100%;
+	}
+
+	.tsm-post-list-link .tsm-post-list-link-content .tsm-post-list-card__image {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	
+</style>
+
+<div class="tsm-container">
+	<div class="tsm-post-list__wrapper">
+		{% for post in posts %}
+		<a href="{{post.link}}" class="tsm-post-list-link">
+			<div class="tsm-post-list-link-content">
+				{% if settings.tsm_post_list_show_image == 'yes' and post.thumbnail %}
+				<div class="tsm-post-list-card__image">
+					<img src="{{ post.thumbnail }}" alt="{{ post.title }}">
+				</div>
+				{% endif %}
+				<div class="tsm-content">
+					{% if settings.tsm_post_list_show_title == 'yes' %}
+					<div class="tsm-content-title">
+						<span class="tsm-content-title">{{ post.title }}</span>
+					</div>
+					{% endif %}
+					{% if settings.tsm_post_list_show_category == 'yes' and post.category_slug %}
+					<div class="tsm-content-category__wrapper">
+						<span class="tsm-content-category">
+							{% if settings.tsm_post_list_category_show_icon == 'yes' %}
+							<i class="{{ settings.tsm_post_list_category_icon.value }}"></i>
+							{% endif %}
+							{{ post.category_name }}
+						</span>
+					</div>
+					{% endif %}
+					{% if settings.tsm_post_list_show_excerpt == 'yes' %}
+					<div class="tsm-content-excerpt">
+						{{ post.excerpt }}
+					</div>
+					{% endif %}
+					{% if settings.tsm_post_list_show_read_more == 'yes' %}
+					<span class="tsm-content-read-more">
+						{{ settings.tsm_post_list_read_more_text }}
+					</span>
+					{% endif %}
+				</div>
+			</div>
+		</a>
+		{% endfor %}
+	</div>
+</div> 
