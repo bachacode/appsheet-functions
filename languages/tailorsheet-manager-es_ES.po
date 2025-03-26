@@ -3,8 +3,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/tailorsheet-"
 "manager\n"
-"POT-Creation-Date: 2025-03-23T22:25:03+00:00\n"
-"PO-Revision-Date: 2025-03-23 21:29-0400\n"
+"POT-Creation-Date: 2025-03-25T22:05:25+00:00\n"
+"PO-Revision-Date: 2025-03-25 18:06-0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: es\n"
@@ -250,6 +250,7 @@ msgid "Appsheet Function"
 msgstr "Expresión AppSheet"
 
 #: includes/Core/Post_Types.php:295 includes/Core/Post_Types.php:296
+#: includes/Widgets/Post_List.php:65
 msgid "Appsheet Functions"
 msgstr "Expresiones de AppSheet"
 
@@ -274,6 +275,7 @@ msgid "AppSheet Example"
 msgstr "Ejemplo de App"
 
 #: includes/Core/Post_Types.php:352 includes/Core/Post_Types.php:355
+#: includes/Widgets/Post_List.php:66
 msgid "AppSheet Examples"
 msgstr "Ejemplos de App"
 
@@ -325,7 +327,7 @@ msgstr "Sí"
 msgid "No"
 msgstr "No"
 
-#: includes/Widgets/Accordion.php:77
+#: includes/Widgets/Accordion.php:77 includes/Widgets/Post_List.php:61
 msgid "Source"
 msgstr "Fuente"
 
@@ -459,9 +461,13 @@ msgstr "Ejemplos de expresiones AppSheet"
 msgid "Appsheet Functions Explanation"
 msgstr "Ejemplos de las expresiones AppSheet"
 
-#: includes/Widgets/AppSheet_Functions_List.php:16
-msgid "Appsheet Functions List"
-msgstr "Lista de expresiones de Appsheet"
+#: includes/Widgets/Post_List.php:16
+msgid "Post List"
+msgstr "Lista de entradas"
+
+#: includes/Widgets/Post_List.php:53
+msgid "Query"
+msgstr "Consulta"
 
 #: tsm_templates/af-admin-function-example-fields.php:5
 #: tsm_templates/af-admin-function-example-fields.php:19
@@ -496,6 +502,9 @@ msgstr "¡Esta expresión no tiene ejemplos!"
 #: tsm_templates/af-explanation-error.php:1
 msgid "This function does not have an explanation!"
 msgstr "¡Esta expresión no tiene explicación!"
+
+#~ msgid "Appsheet Functions List"
+#~ msgstr "Lista de expresiones de Appsheet"
 
 #~ msgid "AppSheet Functions"
 #~ msgstr "Expresiones de AppSheet"
