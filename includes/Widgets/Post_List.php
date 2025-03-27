@@ -101,6 +101,16 @@ class Post_List extends TSM_Widget_Base
                         'multiple' => true,
                     ]
                 );
+
+                $this->add_control(
+                    'tsm_search_placeholder',
+                    [
+                        'label'     => esc_html__('Search Placeholder', 'tailorsheet-manager'),
+                        'type'      => \Elementor\Controls_Manager::TEXT,
+                        'default'   => esc_html__('Search posts...', 'tailorsheet-manager'),
+                        'separator' => 'before',
+                    ]
+                );
             }
         );
     }
@@ -233,6 +243,73 @@ class Post_List extends TSM_Widget_Base
 
     protected function register_style_controls()
     {
+        $this->register_generic_section(
+            'tsm_search_style_section',
+            'Search Bar',
+            \Elementor\Controls_Manager::TAB_STYLE,
+            function() {
+                $this->register_generic_controls(
+                    'post_list_search', 
+                    '.tsm-search-wrapper',
+                    '.tsm-search-input'
+                )
+                ->withBackground()
+                ->withBorder()
+                ->withDimension()
+                ->withText()
+                ->build();
+
+                $this->add_control(
+                    'tsm_search_icon_color',
+                    [
+                        'label'     => esc_html__('Icon Color', 'tailorsheet-manager'),
+                        'type'      => \Elementor\Controls_Manager::COLOR,
+                        'selectors' => [
+                            '{{WRAPPER}} .tsm-search-icon' => 'color: {{VALUE}};',
+                        ],
+                    ]
+                );
+
+                $this->add_responsive_control(
+                    'tsm_search_max_width',
+                    [
+                        'label'     => esc_html__('Max Width', 'tailorsheet-manager'),
+                        'type'      => \Elementor\Controls_Manager::SLIDER,
+                        'size_units' => ['px', '%'],
+                        'range'     => [
+                            'px' => [
+                                'min' => 0,
+                                'max' => 1000,
+                            ],
+                            '%' => [
+                                'min' => 0,
+                                'max' => 100,
+                            ],
+                        ],
+                        'default'   => [
+                            'unit' => 'px',
+                            'size' => 500,
+                        ],
+                        'selectors' => [
+                            '{{WRAPPER}} .tsm-search-container' => 'max-width: {{SIZE}}{{UNIT}};',
+                        ],
+                    ]
+                );
+
+                $this->add_responsive_control(
+                    'tsm_search_margin',
+                    [
+                        'label'     => esc_html__('Margin', 'tailorsheet-manager'),
+                        'type'      => \Elementor\Controls_Manager::DIMENSIONS,
+                        'size_units' => ['px', 'em', '%'],
+                        'selectors' => [
+                            '{{WRAPPER}} .tsm-search-wrapper' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                        ],
+                    ]
+                );
+            }
+        );
+
         $this->register_generic_section(
             'tsm_list_style_section',
             'List',
@@ -560,6 +637,17 @@ class Post_List extends TSM_Widget_Base
     {
         ?>
         <div class="tsm-container">
+        <div class="tsm-search-wrapper">
+            <div class="tsm-search-container">
+                <input 
+                    type="text" 
+                    class="tsm-search-input" 
+                    placeholder="<?php echo esc_attr($settings['tsm_search_placeholder']); ?>" 
+                    x-model="searchQuery"
+                >
+                <i class="fas fa-search tsm-search-icon"></i>
+            </div>
+        </div>
             <div class="tsm-post-list__wrapper">
                 <?php foreach ($posts as $post) : ?>
                     <a href="<?php echo esc_url($post['link']); ?>" class="tsm-post-list-link">
@@ -667,6 +755,27 @@ class Post_List extends TSM_Widget_Base
             .tsm-post-list-link:hover {
                 transform: translateY(-5px);
                 box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            }
+
+            .tsm-search-wrapper {
+                margin-bottom: 1.5rem;
+            }
+
+            .tsm-search-container {
+                position: relative;
+                width: 100%;
+            }
+
+            .tsm-search-input {
+                width: 100%;
+                padding: 0.75rem 2.5rem 0.75rem 1rem;
+            }
+
+            .tsm-search-icon {
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
             }
         </style>
         <?php

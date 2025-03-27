@@ -96,11 +96,43 @@
 	[x-cloak] {
 		display: none !important;
 	}
+
+	.tsm-search-wrapper {
+		margin-bottom: 1.5rem;
+	}
+
+	.tsm-search-container {
+		position: relative;
+		width: 100%;
+	}
+
+	.tsm-search-input {
+		width: 100%;
+		padding: 0.75rem 2.5rem 0.75rem 1rem;
+	}
+
+	.tsm-search-icon {
+		position: absolute;
+		right: 1rem;
+		top: 50%;
+		transform: translateY(-50%);
+	}
 </style>
 
 {# Server-side rendered content #}
 <div class="tsm-container" x-data="postList_{{ unique_id }}()">
-	<div class="tsm-post-list__wrapper">
+	<div class="tsm-search-wrapper">
+		<div class="tsm-search-container">
+			<input 
+				type="text" 
+				class="tsm-search-input" 
+				placeholder="{{ settings.tsm_search_placeholder }}" 
+				x-model="searchQuery"
+			>
+			<i class="fas fa-search tsm-search-icon"></i>
+		</div>
+	</div>
+	<div class="tsm-post-list__wrapper" x-ref="postsContainer">
 		{% for post in posts %}
 			<a href="{{ post.link }}" class="tsm-post-list-link">
 				<div class="tsm-post-list-link-content">
@@ -147,30 +179,29 @@ function postList_{{ unique_id }}() {
 	return {
 		posts: {{ posts|json_encode|raw }},
 		settings: {{ settings|json_encode|raw }},
-		filteredPosts: [],
 		searchQuery: '',
 		
 		init() {
-			// Initialize filtered posts with server-rendered posts
-			this.filteredPosts = this.posts;
-			
-			// Watch for changes in posts or search query
-			this.$watch('posts', () => this.filterPosts());
+			// Watch for changes in search query
 			this.$watch('searchQuery', () => this.filterPosts());
 		},
 		
 		filterPosts() {
-			if (!this.searchQuery) {
-				this.filteredPosts = this.posts;
-				return;
-			}
-			
 			const query = this.searchQuery.toLowerCase();
-			this.filteredPosts = this.posts.filter(post => 
-				post.title.toLowerCase().includes(query) ||
-				post.excerpt.toLowerCase().includes(query) ||
-				post.category_name.toLowerCase().includes(query)
-			);
+			const posts = this.$refs.postsContainer.querySelectorAll('.tsm-post-list-link');
+			
+			posts.forEach(post => {
+				const title = post.querySelector('.tsm-content-title')?.textContent.toLowerCase() || '';
+				const excerpt = post.querySelector('.tsm-content-excerpt')?.textContent.toLowerCase() || '';
+				const category = post.querySelector('.tsm-content-category span:last-child')?.textContent.toLowerCase() || '';
+				
+				const matches = 
+					title.includes(query) ||
+					excerpt.includes(query) ||
+					category.includes(query);
+				
+				post.style.display = matches ? '' : 'none';
+			});
 		}
 	}
 }
