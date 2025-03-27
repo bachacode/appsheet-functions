@@ -4,22 +4,35 @@
 		width: 100%;
 	}
 
-	.tsm-post-list-link {
+	.tsm-post-list-element {
+		position: relative;
 		display: flex;
 		flex-direction: column;
 		height: 100%;
-		text-decoration: none;
 	}
 
-	.tsm-post-list-link-content {
+	.tsm-post-list-element-content {
 		display: flex;
 		flex-direction: column;
 		height: 100%;
+	}
+
+	.tsm-post-list-full-link {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 1;
 	}
 
 	.tsm-post-list-card__image {
 		width: 100%;
 		overflow: hidden;
+		display: block;
+		text-decoration: none;
+		position: relative;
+		z-index: 2;
 	}
 
 	.tsm-post-list-card__image img {
@@ -39,6 +52,13 @@
 		margin-bottom: 0.5rem;
 	}
 
+	.tsm-content-title {
+		text-decoration: none;
+		display: block;
+		position: relative;
+		z-index: 2;
+	}
+
 	.tsm-content-category__wrapper {
 		margin-bottom: 0.5rem;
 	}
@@ -50,16 +70,15 @@
 
 	.tsm-content-read-more {
 		margin-top: auto;
+		text-decoration: none;
+		display: inline-block;
+		position: relative;
+		z-index: 2;
 	}
 
 	/* Add transition for smooth animations */
 	.tsm-container * {
 		transition: all 0.3s ease;
-	}
-
-	.tsm-post-list-link:hover {
-		transform: translateY(-5px);
-		box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 	}
 
 	/* Hide Alpine.js content until it's ready */
@@ -105,17 +124,20 @@
 		</div>
 		<div class="tsm-post-list__wrapper" x-ref="postsContainer">
 			{% for post in posts %}
-				<a href="{{ post.link }}" class="tsm-post-list-link">
-					<div class="tsm-post-list-link-content">
+				<div class="tsm-post-list-element">
+					{% if settings.tsm_post_list_whole_post_linkable == 'yes' %}
+						<a href="{{ post.link }}" class="tsm-post-list-full-link" aria-label="{{ post.title }}"></a>
+					{% endif %}
+					<div class="tsm-post-list-element-content">
 						{% if settings.tsm_post_list_show_image == 'yes' and post.thumbnail %}
-							<div class="tsm-post-list-card__image">
+							<a href="{{ post.link }}" class="tsm-post-list-card__image">
 								<img src="{{ post.thumbnail }}" alt="{{ post.title }}">
-							</div>
+							</a>
 						{% endif %}
 						<div class="tsm-content">
 							{% if settings.tsm_post_list_show_title == 'yes' %}
 								<div class="tsm-content-title__wrapper">
-									<span class="tsm-content-title">{{ post.title }}</span>
+									<a href="{{ post.link }}" class="tsm-content-title">{{ post.title }}</a>
 								</div>
 							{% endif %}
 							{% if settings.tsm_post_list_show_category == 'yes' and post.category_slug %}
@@ -135,16 +157,17 @@
 							{% endif %}
 							{% if settings.tsm_post_list_show_read_more == 'yes' %}
 								<div class="tsm-content-read-more__wrapper">
-									<span class="tsm-content-read-more">{{ settings.tsm_post_list_read_more_text }}</span>
+									<a href="{{ post.link }}" class="tsm-content-read-more">{{ settings.tsm_post_list_read_more_text }}</a>
 								</div>
 							{% endif %}
 						</div>
 					</div>
-				</a>
+				</div>
 			{% endfor %}
 		</div>
 	</div>
 </div>
+
 <script>
 function postList_{{ unique_id }}() {
 	return {
@@ -159,7 +182,7 @@ function postList_{{ unique_id }}() {
 		
 		filterPosts() {
 			const query = this.searchQuery.toLowerCase();
-			const posts = this.$refs.postsContainer.querySelectorAll('.tsm-post-list-link');
+			const posts = this.$refs.postsContainer.querySelectorAll('.tsm-post-list-element');
 			
 			posts.forEach(post => {
 				const title = post.querySelector('.tsm-content-title')?.textContent.toLowerCase() || '';

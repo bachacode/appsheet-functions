@@ -49,8 +49,8 @@ class TSM_Widget_Base extends \Elementor\Widget_Base
         $this->end_controls_section();
     }
 
-    protected function register_generic_controls($control_id, $parent_selector, $child_selector) {
-        $this->control_builder = new TSM_Control_Builder($this, $control_id, $parent_selector, $child_selector);
+    protected function register_generic_controls($control_id, $child_selector, $parent_selector = '') {
+        $this->control_builder = new TSM_Control_Builder($this, $control_id, $child_selector, $parent_selector);
         return $this->control_builder;
     }
 }

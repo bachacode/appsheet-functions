@@ -85,10 +85,10 @@ class TSM_Control_Builder {
      * 
      * @param \Elementor\Widget_Base $widget The Elementor widget instance
      * @param string $control_id Unique identifier for the control group
-     * @param string $parent_selector CSS selector for the parent element
      * @param string $child_selector CSS selector for the child element
+     * @param string $parent_selector CSS selector for the parent element
      */
-    public function __construct($widget, $control_id, $parent_selector, $child_selector) {
+    public function __construct($widget, $control_id, $child_selector, $parent_selector = '') {
         if (!$widget instanceof \Elementor\Widget_Base) {
             throw new \InvalidArgumentException('Widget must be an instance of Elementor\Widget_Base');
         }
@@ -97,18 +97,14 @@ class TSM_Control_Builder {
             throw new \InvalidArgumentException('Control ID must be a non-empty string');
         }
 
-        if (!is_string($parent_selector) || empty($parent_selector)) {
-            throw new \InvalidArgumentException('Parent selector must be a non-empty string');
-        }
-
         if (!is_string($child_selector) || empty($child_selector)) {
             throw new \InvalidArgumentException('Child selector must be a non-empty string');
         }
         
         $this->widget = $widget;
         $this->control_id = sanitize_key($control_id);
-        $this->parent_selector = $this->sanitize_css_selector($parent_selector);
         $this->child_selector = $this->sanitize_css_selector($child_selector);
+        $this->parent_selector = $this->sanitize_css_selector($parent_selector);
     }
 
     /**
@@ -118,16 +114,22 @@ class TSM_Control_Builder {
      * @return string The sanitized CSS selector
      */
     private function sanitize_css_selector($selector) {
+        // If it's not a string, return empty string (parent selector can be empty)
         if (!is_string($selector)) {
-            return '.tsm-default-selector';
+            return '';
+        }
+
+        // If it's an empty string, return it (parent selector can be empty)
+        if (empty($selector)) {
+            return '';
         }
 
         // Remove any potentially dangerous characters
         $selector = preg_replace('/[^a-zA-Z0-9\s\-_.,#\[\]()=:>+~*]/', '', $selector);
         
-        // Ensure the selector is not empty and starts with a valid character
-        if (empty($selector) || !preg_match('/^[a-zA-Z0-9\-_.#\[\]()=:>+~*]/', $selector)) {
-            return '.tsm-default-selector';
+        // Ensure the selector starts with a valid character
+        if (!preg_match('/^[a-zA-Z0-9\-_.#\[\]()=:>+~*]/', $selector)) {
+            return '';
         }
 
         return $selector;
@@ -291,7 +293,7 @@ class TSM_Control_Builder {
                 'label'     => esc_html__( 'Background Color (Hover)', 'tailorsheet-manager' ),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
-                    "{{WRAPPER}} {$this->parent_selector}:hover {$this->child_selector}" => 'background-color: {{VALUE}};',
+                    $this->get_hover_selector() => 'background-color: {{VALUE}};',
                 ],
             ]
         );
@@ -377,7 +379,7 @@ class TSM_Control_Builder {
                 'label'     => esc_html__( 'Border Color (Hover)', 'tailorsheet-manager' ),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
-                    "{{WRAPPER}} {$this->parent_selector}:hover {$this->child_selector}" => 'border-color: {{VALUE}};',
+                    $this->get_hover_selector() => 'border-color: {{VALUE}};',
                 ],
             ]
         );
@@ -492,7 +494,7 @@ class TSM_Control_Builder {
                 'label'     => esc_html__( 'Text Color (Hover)', 'tailorsheet-manager' ),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
-                    "{{WRAPPER}} {$this->parent_selector}:hover {$this->child_selector}" => 'color: {{VALUE}};',
+                    $this->get_hover_selector() => 'color: {{VALUE}};',
                 ],
             ]
         );
@@ -572,12 +574,19 @@ class TSM_Control_Builder {
             [
                 'name'     => "tsm_{$this->control_id}_shadow_hover",
                 'label'    => esc_html__( 'Box Shadow (Hover)', 'tailorsheet-manager' ),
-                'selector' => "{{WRAPPER}} {$this->parent_selector}:hover {$this->child_selector}",
+                'selector' => $this->get_hover_selector(),
             ]
         );
 
         $this->widget->end_controls_tab();
 
         $this->widget->end_controls_tabs();
+    }
+
+    private function get_hover_selector() {
+        if (!empty($this->parent_selector)) {
+            return "{{WRAPPER}} {$this->parent_selector}:hover {$this->child_selector}";
+        }
+        return "{{WRAPPER}} {$this->child_selector}:hover";
     }
 }
