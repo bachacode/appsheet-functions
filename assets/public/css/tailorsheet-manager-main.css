@@ -1,4 +1,4 @@
-.af-main__wrapper {
+.tsm-main__wrapper {
     display: flex; 
     padding-top: 1.5rem;
     padding-bottom: 1.5rem; 
@@ -8,7 +8,7 @@
     height: auto; 
 }
 
-.af-main__wrapper .af-form-category {
+.tsm-main__wrapper .af-form-category {
     display: flex; 
     padding: 0.75rem; 
     margin-right: 1rem;
@@ -22,7 +22,7 @@
 }
 
 @media (min-width: 768px) { 
-    .af-main__wrapper .af-form-category {
+    .tsm-main__wrapper .af-form-category {
         min-width: 200px;
     }
 }
@@ -126,7 +126,7 @@
     width: fit-content; 
 }
 
-.af-main__wrapper .af-posts-list {
+.tsm-main__wrapper .af-posts-list {
     display: flex; 
     margin-top: 1.5rem; 
     flex-direction: column; 
