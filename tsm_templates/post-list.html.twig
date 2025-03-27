@@ -98,82 +98,80 @@
 	}
 </style>
 
-<div class="tsm-container" x-data="postList_{{ unique_id }}()" x-cloak>
+{# Server-side rendered content #}
+<div class="tsm-container" x-data="postList_{{ unique_id }}()">
 	<div class="tsm-post-list__wrapper">
-		<template x-for="post in filteredPosts" :key="post.id">
-			<a :href="post.link" class="tsm-post-list-link">
+		{% for post in posts %}
+			<a href="{{ post.link }}" class="tsm-post-list-link">
 				<div class="tsm-post-list-link-content">
-					<template x-if="settings.tsm_post_list_show_image === 'yes' && post.thumbnail">
+					{% if settings.tsm_post_list_show_image == 'yes' and post.thumbnail %}
 						<div class="tsm-post-list-card__image">
-							<img :src="post.thumbnail" :alt="post.title">
+							<img src="{{ post.thumbnail }}" alt="{{ post.title }}">
 						</div>
-					</template>
+					{% endif %}
 					<div class="tsm-content">
-						<template x-if="settings.tsm_post_list_show_title === 'yes'">
+						{% if settings.tsm_post_list_show_title == 'yes' %}
 							<div class="tsm-content-title__wrapper">
-								<span class="tsm-content-title" x-text="post.title"></span>
+								<span class="tsm-content-title">{{ post.title }}</span>
 							</div>
-						</template>
-						<template x-if="settings.tsm_post_list_show_category === 'yes' && post.category_slug">
+						{% endif %}
+						{% if settings.tsm_post_list_show_category == 'yes' and post.category_slug %}
 							<div class="tsm-content-category__wrapper">
 								<span class="tsm-content-category">
-									<template x-if="settings.tsm_post_list_category_show_icon === 'yes'">
-										<i :class="settings.tsm_post_list_category_icon.value"></i>
-									</template>
-									<span x-text="post.category_name"></span>
+									{% if settings.tsm_post_list_category_show_icon == 'yes' %}
+										<i class="{{ settings.tsm_post_list_category_icon.value }}"></i>
+									{% endif %}
+									<span>{{ post.category_name }}</span>
 								</span>
 							</div>
-						</template>
-						<template x-if="settings.tsm_post_list_show_excerpt === 'yes'">
+						{% endif %}
+						{% if settings.tsm_post_list_show_excerpt == 'yes' %}
 							<div class="tsm-content-excerpt__wrapper">
-								<span class="tsm-content-excerpt" x-text="post.excerpt"></span>
+								<span class="tsm-content-excerpt">{{ post.excerpt }}</span>
 							</div>
-						</template>
-						<template x-if="settings.tsm_post_list_show_read_more === 'yes'">
+						{% endif %}
+						{% if settings.tsm_post_list_show_read_more == 'yes' %}
 							<div class="tsm-content-read-more__wrapper">
-								<span class="tsm-content-read-more" x-text="settings.tsm_post_list_read_more_text"></span>
+								<span class="tsm-content-read-more">{{ settings.tsm_post_list_read_more_text }}</span>
 							</div>
-						</template>
+						{% endif %}
 					</div>
 				</div>
 			</a>
-		</template>
+		{% endfor %}
 	</div>
 </div>
 
 <script>
 function postList_{{ unique_id }}() {
-    return {
-        posts: {{ posts|json_encode|raw }},
-        settings: {{ settings|json_encode|raw }},
-        filteredPosts: [],
-        searchQuery: '',
-        
-        init() {
-            // Initialize filtered posts
-            this.filteredPosts = this.posts;
-            
-            // Show the container when Alpine.js is ready
-            this.$el.style.display = 'block';
-            
-            // Watch for changes in posts or search query
-            this.$watch('posts', () => this.filterPosts());
-            this.$watch('searchQuery', () => this.filterPosts());
-        },
-        
-        filterPosts() {
-            if (!this.searchQuery) {
-                this.filteredPosts = this.posts;
-                return;
-            }
-            
-            const query = this.searchQuery.toLowerCase();
-            this.filteredPosts = this.posts.filter(post => 
-                post.title.toLowerCase().includes(query) ||
-                post.excerpt.toLowerCase().includes(query) ||
-                post.category_name.toLowerCase().includes(query)
-            );
-        }
-    }
+	return {
+		posts: {{ posts|json_encode|raw }},
+		settings: {{ settings|json_encode|raw }},
+		filteredPosts: [],
+		searchQuery: '',
+		
+		init() {
+			// Initialize filtered posts with server-rendered posts
+			this.filteredPosts = this.posts;
+			
+			// Watch for changes in posts or search query
+			this.$watch('posts', () => this.filterPosts());
+			this.$watch('searchQuery', () => this.filterPosts());
+		},
+		
+		filterPosts() {
+			if (!this.searchQuery) {
+				this.filteredPosts = this.posts;
+				return;
+			}
+			
+			const query = this.searchQuery.toLowerCase();
+			this.filteredPosts = this.posts.filter(post => 
+				post.title.toLowerCase().includes(query) ||
+				post.excerpt.toLowerCase().includes(query) ||
+				post.category_name.toLowerCase().includes(query)
+			);
+		}
+	}
 }
 </script> 
