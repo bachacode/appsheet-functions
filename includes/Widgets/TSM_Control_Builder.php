@@ -74,6 +74,13 @@ class TSM_Control_Builder {
     private $include_text_align = false;
 
     /**
+     * Flag to determine if shadow controls should be registered
+     * 
+     * @var boolean
+     */
+    private $include_shadow = false;
+
+    /**
      * Constructor for the control builder
      * 
      * @param \Elementor\Widget_Base $widget The Elementor widget instance
@@ -183,6 +190,19 @@ class TSM_Control_Builder {
     }
 
     /**
+     * Enables the registration of shadow controls
+     * 
+     * This method sets the flag to include shadow controls
+     * including hover states.
+     * 
+     * @return TSM_Control_Builder
+     */
+    public function withShadow() {
+        $this->include_shadow = true;
+        return $this;
+    }
+
+    /**
      * Builds and registers all selected controls
      * 
      * This method checks which controls have been enabled and registers
@@ -193,7 +213,8 @@ class TSM_Control_Builder {
      */
     public function build() {
         if (!$this->include_background && !$this->include_border && 
-            !$this->include_dimension && !$this->include_text && !$this->include_text_align) {
+            !$this->include_dimension && !$this->include_text && 
+            !$this->include_text_align && !$this->include_shadow) {
             throw new \RuntimeException('At least one control type must be selected');
         }
         if ($this->include_background) {
@@ -210,6 +231,9 @@ class TSM_Control_Builder {
         }
         if ($this->include_text_align) {
             $this->register_text_align_controls();
+        }
+        if ($this->include_shadow) {
+            $this->register_shadow_controls();
         }
     }
 
@@ -380,7 +404,7 @@ class TSM_Control_Builder {
             ]
         );
 
-        $this->widget->add_control(
+        $this->widget->add_responsive_control(
             "tsm_{$this->control_id}_padding",
             [
                 'label'      => esc_html__( 'Padding', 'tailorsheet-manager' ),
@@ -392,7 +416,7 @@ class TSM_Control_Builder {
             ]
         );
 
-        $this->widget->add_control(
+        $this->widget->add_responsive_control(
             "tsm_{$this->control_id}_margin",
             [
                 'label'      => esc_html__( 'Margin', 'tailorsheet-manager' ),
@@ -479,7 +503,7 @@ class TSM_Control_Builder {
     }
 
     private function register_text_align_controls() {
-        $this->widget->add_control(
+        $this->widget->add_responsive_control(
             "tsm_{$this->control_id}_text_align",
             [
                 'label'     => esc_html__( 'Text Align', 'tailorsheet-manager' ),
@@ -495,5 +519,65 @@ class TSM_Control_Builder {
                 ],
             ]
         );
+    }
+
+    /**
+     * Registers shadow-related controls
+     * 
+     * Adds controls for box shadow and hover states.
+     * 
+     * @return void
+     */
+    private function register_shadow_controls() {
+        $this->widget->add_control(
+            "tsm_{$this->control_id}_shadow_header",
+            [
+                'label' => esc_html__( 'Shadow Options', 'tailorsheet-manager' ),
+                'type' => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
+            ]
+        );
+
+        $this->widget->start_controls_tabs(
+            "tsm_{$this->control_id}_shadow_tabs"
+        );
+
+        $this->widget->start_controls_tab(
+            "tsm_{$this->control_id}_shadow_tab_normal",
+            [
+                'label' => esc_html__( 'Normal', 'tailorsheet-manager' ),
+            ]
+        );
+
+        $this->widget->add_group_control(
+            \Elementor\Group_Control_Box_Shadow::get_type(),
+            [
+                'name'     => "tsm_{$this->control_id}_shadow",
+                'label'    => esc_html__( 'Box Shadow', 'tailorsheet-manager' ),
+                'selector' => "{{WRAPPER}} {$this->child_selector}",
+            ]
+        );
+
+        $this->widget->end_controls_tab();
+
+        $this->widget->start_controls_tab(
+            "tsm_{$this->control_id}_shadow_tab_hover",
+            [
+                'label' => esc_html__( 'Hover', 'tailorsheet-manager' ),
+            ]
+        );
+
+        $this->widget->add_group_control(
+            \Elementor\Group_Control_Box_Shadow::get_type(),
+            [
+                'name'     => "tsm_{$this->control_id}_shadow_hover",
+                'label'    => esc_html__( 'Box Shadow (Hover)', 'tailorsheet-manager' ),
+                'selector' => "{{WRAPPER}} {$this->parent_selector}:hover {$this->child_selector}",
+            ]
+        );
+
+        $this->widget->end_controls_tab();
+
+        $this->widget->end_controls_tabs();
     }
 }

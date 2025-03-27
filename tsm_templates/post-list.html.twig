@@ -34,54 +34,146 @@
 		width: 100%;
 	}
 
-	.tsm-post-list-link .tsm-post-list-link-content .tsm-post-list-card__image {
-		width: 100%;
+	.tsm-post-list-link {
+		display: flex;
+		flex-direction: column;
 		height: 100%;
-		object-fit: cover;
+		text-decoration: none;
 	}
 
-	
+	.tsm-post-list-link-content {
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+	}
+
+	.tsm-post-list-card__image {
+		width: 100%;
+		overflow: hidden;
+	}
+
+	.tsm-post-list-card__image img {
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+	}
+
+	.tsm-content {
+		display: flex;
+		flex-direction: column;
+		flex: 1;
+		height: 100%;
+	}
+
+	.tsm-content-title__wrapper {
+		margin-bottom: 0.5rem;
+	}
+
+	.tsm-content-category__wrapper {
+		margin-bottom: 0.5rem;
+	}
+
+	.tsm-content-excerpt__wrapper {
+		flex: 1;
+		margin-bottom: 0.5rem;
+	}
+
+	.tsm-content-read-more {
+		margin-top: auto;
+	}
+
+	/* Add transition for smooth animations */
+	.tsm-container * {
+		transition: all 0.3s ease;
+	}
+
+	.tsm-post-list-link:hover {
+		transform: translateY(-5px);
+		box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+	}
+
+	/* Hide Alpine.js content until it's ready */
+	[x-cloak] {
+		display: none !important;
+	}
 </style>
 
-<div class="tsm-container">
+<div class="tsm-container" x-data="postList_{{ unique_id }}()" x-cloak>
 	<div class="tsm-post-list__wrapper">
-		{% for post in posts %}
-		<a href="{{post.link}}" class="tsm-post-list-link">
-			<div class="tsm-post-list-link-content">
-				{% if settings.tsm_post_list_show_image == 'yes' and post.thumbnail %}
-				<div class="tsm-post-list-card__image">
-					<img src="{{ post.thumbnail }}" alt="{{ post.title }}">
+		<template x-for="post in filteredPosts" :key="post.id">
+			<a :href="post.link" class="tsm-post-list-link">
+				<div class="tsm-post-list-link-content">
+					<template x-if="settings.tsm_post_list_show_image === 'yes' && post.thumbnail">
+						<div class="tsm-post-list-card__image">
+							<img :src="post.thumbnail" :alt="post.title">
+						</div>
+					</template>
+					<div class="tsm-content">
+						<template x-if="settings.tsm_post_list_show_title === 'yes'">
+							<div class="tsm-content-title__wrapper">
+								<span class="tsm-content-title" x-text="post.title"></span>
+							</div>
+						</template>
+						<template x-if="settings.tsm_post_list_show_category === 'yes' && post.category_slug">
+							<div class="tsm-content-category__wrapper">
+								<span class="tsm-content-category">
+									<template x-if="settings.tsm_post_list_category_show_icon === 'yes'">
+										<i :class="settings.tsm_post_list_category_icon.value"></i>
+									</template>
+									<span x-text="post.category_name"></span>
+								</span>
+							</div>
+						</template>
+						<template x-if="settings.tsm_post_list_show_excerpt === 'yes'">
+							<div class="tsm-content-excerpt__wrapper">
+								<span class="tsm-content-excerpt" x-text="post.excerpt"></span>
+							</div>
+						</template>
+						<template x-if="settings.tsm_post_list_show_read_more === 'yes'">
+							<div class="tsm-content-read-more__wrapper">
+								<span class="tsm-content-read-more" x-text="settings.tsm_post_list_read_more_text"></span>
+							</div>
+						</template>
+					</div>
 				</div>
-				{% endif %}
-				<div class="tsm-content">
-					{% if settings.tsm_post_list_show_title == 'yes' %}
-					<div class="tsm-content-title">
-						<span class="tsm-content-title">{{ post.title }}</span>
-					</div>
-					{% endif %}
-					{% if settings.tsm_post_list_show_category == 'yes' and post.category_slug %}
-					<div class="tsm-content-category__wrapper">
-						<span class="tsm-content-category">
-							{% if settings.tsm_post_list_category_show_icon == 'yes' %}
-							<i class="{{ settings.tsm_post_list_category_icon.value }}"></i>
-							{% endif %}
-							{{ post.category_name }}
-						</span>
-					</div>
-					{% endif %}
-					{% if settings.tsm_post_list_show_excerpt == 'yes' %}
-					<div class="tsm-content-excerpt">
-						{{ post.excerpt }}
-					</div>
-					{% endif %}
-					{% if settings.tsm_post_list_show_read_more == 'yes' %}
-					<span class="tsm-content-read-more">
-						{{ settings.tsm_post_list_read_more_text }}
-					</span>
-					{% endif %}
-				</div>
-			</div>
-		</a>
-		{% endfor %}
+			</a>
+		</template>
 	</div>
-</div> 
+</div>
+
+<script>
+function postList_{{ unique_id }}() {
+    return {
+        posts: {{ posts|json_encode|raw }},
+        settings: {{ settings|json_encode|raw }},
+        filteredPosts: [],
+        searchQuery: '',
+        
+        init() {
+            // Initialize filtered posts
+            this.filteredPosts = this.posts;
+            
+            // Show the container when Alpine.js is ready
+            this.$el.style.display = 'block';
+            
+            // Watch for changes in posts or search query
+            this.$watch('posts', () => this.filterPosts());
+            this.$watch('searchQuery', () => this.filterPosts());
+        },
+        
+        filterPosts() {
+            if (!this.searchQuery) {
+                this.filteredPosts = this.posts;
+                return;
+            }
+            
+            const query = this.searchQuery.toLowerCase();
+            this.filteredPosts = this.posts.filter(post => 
+                post.title.toLowerCase().includes(query) ||
+                post.excerpt.toLowerCase().includes(query) ||
+                post.category_name.toLowerCase().includes(query)
+            );
+        }
+    }
+}
+</script> 

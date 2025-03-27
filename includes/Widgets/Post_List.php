@@ -112,7 +112,7 @@ class Post_List extends TSM_Widget_Base
             'List',
             \Elementor\Controls_Manager::TAB_CONTENT,
             function() {
-                $this->add_control(
+                $this->add_responsive_control(
                     'tsm_list_cols',
                     [
                         'label'     => esc_html__( 'Columns', 'tailorsheet-manager' ),
@@ -259,6 +259,46 @@ class Post_List extends TSM_Widget_Base
                         ],
                     ]
                 );
+
+                $this->add_control(
+                    'tsm_post_list_width',
+                    [
+                        'label'     => esc_html__('List Width (px)', 'tailorsheet-manager'),
+                        'type'      => \Elementor\Controls_Manager::NUMBER,
+                        'selectors' => [
+                            '{{WRAPPER}} .tsm-post-list__wrapper' => 'width: {{VALUE}}px;',
+                        ],
+                    ]
+                );
+            }
+        );
+
+        $this->register_generic_section(
+            'tsm_element_style_section',
+            'Element',
+            \Elementor\Controls_Manager::TAB_STYLE,
+            function() {
+                $this->register_generic_controls(
+                    'post_list_element', 
+                    '.tsm-post-list-link',
+                    '.tsm-post-list-link'
+                )
+                ->withBackground()
+                ->withBorder()
+                ->withDimension()
+                ->withShadow()
+                ->build();
+
+                $this->add_control(
+                    'tsm_post_list_element_width',
+                    [
+                        'label'     => esc_html__('Element Width (px)', 'tailorsheet-manager'),
+                        'type'      => \Elementor\Controls_Manager::NUMBER,
+                        'selectors' => [
+                            '{{WRAPPER}} .tsm-post-list-link' => 'max-width: {{VALUE}}px;',
+                        ],
+                    ]
+                );
             }
         );
 
@@ -270,24 +310,12 @@ class Post_List extends TSM_Widget_Base
                 $this->register_generic_controls(
                     'post_list_content', 
                     '.tsm-post-list-link',
-                    '.tsm-post-list-link-content'
+                    '.tsm-content'
                 )
                 ->withBackground()
                 ->withBorder()
                 ->withDimension()
                 ->build();
-
-                $this->add_control(
-                    'tsm_post_list_content_width',
-                    [
-                        'label'     => esc_html__('Content Width (px)', 'tailorsheet-manager'),
-                        'type'      => \Elementor\Controls_Manager::NUMBER,
-                        'default'   => 100,
-                        'selectors' => [
-                            '{{WRAPPER}} .tsm-post-list-link-content' => 'max-width: {{VALUE}}px;',
-                        ],
-                    ]
-                );
             }
         );
 
@@ -298,7 +326,7 @@ class Post_List extends TSM_Widget_Base
             function() {
                 $this->register_generic_controls(
                     'post_list_heading_wrapper', 
-                    '.tsm-post-list-card-link',
+                    '.tsm-post-list-link',
                     '.tsm-content-title__wrapper'
                 )
                 ->withBackground()
@@ -325,6 +353,24 @@ class Post_List extends TSM_Widget_Base
         );
 
         $this->register_generic_section(
+            'tsm_excerpt_wrapper_style_section',
+            'Excerpt Wrapper',
+            \Elementor\Controls_Manager::TAB_STYLE,
+            function() {
+                $this->register_generic_controls(
+                    'post_list_excerpt_wrapper', 
+                    '.tsm-post-list-card-link',
+                    '.tsm-content-excerpt__wrapper'
+                )
+                ->withBackground()
+                ->withBorder()
+                ->withDimension()
+                ->withTextAlign()
+                ->build();
+            }
+        );
+
+        $this->register_generic_section(
             'tsm_excerpt_style_section',
             'Excerpt',
             \Elementor\Controls_Manager::TAB_STYLE,
@@ -338,6 +384,24 @@ class Post_List extends TSM_Widget_Base
                 ->withBackground()
                 ->withBorder()
                 ->withDimension()
+                ->build();
+            }
+        );
+
+        $this->register_generic_section(
+            'tsm_read_more_wrapper_style_section',
+            'Read More Wrapper',
+            \Elementor\Controls_Manager::TAB_STYLE,
+            function() {
+                $this->register_generic_controls(
+                    'post_list_read_more_wrapper', 
+                    '.tsm-post-list-card-link',
+                    '.tsm-content-read-more__wrapper'
+                )
+                ->withBackground()
+                ->withBorder()
+                ->withDimension()
+                ->withTextAlign()
                 ->build();
             }
         );
@@ -374,6 +438,18 @@ class Post_List extends TSM_Widget_Base
                 ->withBorder()
                 ->withDimension()
                 ->build();
+
+                $this->add_control(
+                    'tsm_post_list_image_height',
+                    [
+                        'label'     => esc_html__('Image Height (px)', 'tailorsheet-manager'),
+                        'type'      => \Elementor\Controls_Manager::NUMBER,
+                        'default'   => 100, 
+                        'selectors' => [
+                            '{{WRAPPER}} .tsm-post-list-card__image' => 'height: {{VALUE}}px;',
+                        ],
+                    ]
+                );
             }
         );
 
@@ -416,9 +492,19 @@ class Post_List extends TSM_Widget_Base
 
     protected function render()
     {
-        wp_enqueue_script('tailorsheet-manager-alpinejs');
+        // Enqueue Alpine.js
+        wp_enqueue_script(
+            'tailorsheet-manager-alpinejs',
+            'https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js',
+            [],
+            '3.x.x',
+            true
+        );
 
         $settings = $this->get_settings_for_display();
+        
+        // Generate a unique ID for this widget instance
+        $unique_id = 'tsm_' . $this->get_id();
 
         // Fetch posts
         $args = [
@@ -452,21 +538,138 @@ class Post_List extends TSM_Widget_Base
         }
         wp_reset_postdata();
 
-        // Fetch categories
-        $categories = get_categories(['hide_empty' => true]);
-        $category_data = [];
-        foreach ($categories as $category) {
-            $category_data[] = [
-                'name' => $category->name,
-                'slug' => $category->slug,
-            ];
+        // Check if we're in Elementor editor
+        if (\Elementor\Plugin::$instance->editor->is_edit_mode()) {
+            $this->render_preview($posts, $settings);
+        } else {
+            Helpers::render_twig_template('post-list.html.twig', [
+                'posts'      => $posts,
+                'settings'   => $settings,
+                'unique_id'  => $unique_id
+            ]);
         }
-    
-        Helpers::render_twig_template('post-list.html.twig', [
-            'posts'      => $posts,
-            'categories' => $category_data,
-            'settings'   => $settings
-        ]);
+    }
+
+    /**
+     * Render preview for Elementor editor
+     * 
+     * @param array $posts Array of post data
+     * @param array $settings Widget settings
+     */
+    protected function render_preview($posts, $settings)
+    {
+        ?>
+        <div class="tsm-container">
+            <div class="tsm-post-list__wrapper">
+                <?php foreach ($posts as $post) : ?>
+                    <a href="<?php echo esc_url($post['link']); ?>" class="tsm-post-list-link">
+                        <div class="tsm-post-list-link-content">
+                            <?php if ($settings['tsm_post_list_show_image'] === 'yes' && $post['thumbnail']) : ?>
+                                <div class="tsm-post-list-card__image">
+                                    <img src="<?php echo esc_url($post['thumbnail']); ?>" alt="<?php echo esc_attr($post['title']); ?>">
+                                </div>
+                            <?php endif; ?>
+                            <div class="tsm-content">
+                                <?php if ($settings['tsm_post_list_show_title'] === 'yes') : ?>
+                                    <div class="tsm-content-title__wrapper">
+                                        <span class="tsm-content-title"><?php echo esc_html($post['title']); ?></span>
+                                    </div>
+                                <?php endif; ?>
+                                <?php if ($settings['tsm_post_list_show_category'] === 'yes' && $post['category_slug']) : ?>
+                                    <div class="tsm-content-category__wrapper">
+                                        <span class="tsm-content-category">
+                                            <?php if ($settings['tsm_post_list_category_show_icon'] === 'yes') : ?>
+                                                <i class="<?php echo esc_attr($settings['tsm_post_list_category_icon']['value']); ?>"></i>
+                                            <?php endif; ?>
+                                            <span><?php echo esc_html($post['category_name']); ?></span>
+                                        </span>
+                                    </div>
+                                <?php endif; ?>
+                                <?php if ($settings['tsm_post_list_show_excerpt'] === 'yes') : ?>
+                                    <div class="tsm-content-excerpt__wrapper">
+                                        <span class="tsm-content-excerpt"><?php echo wp_kses_post($post['excerpt']); ?></span>
+                                    </div>
+                                <?php endif; ?>
+                                <?php if ($settings['tsm_post_list_show_read_more'] === 'yes') : ?>
+                                    <div class="tsm-content-read-more__wrapper">
+                                        <span class="tsm-content-read-more"><?php echo esc_html($settings['tsm_post_list_read_more_text']); ?></span>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </a>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <style>
+            .tsm-container {
+                width: 100%;
+            }
+
+            .tsm-post-list__wrapper {
+                display: grid;
+                width: 100%;
+            }
+
+            .tsm-post-list-link {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+                text-decoration: none;
+            }
+
+            .tsm-post-list-link-content {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+            }
+
+            .tsm-post-list-card__image {
+                width: 100%;
+                overflow: hidden;
+            }
+
+            .tsm-post-list-card__image img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+
+            .tsm-content {
+                display: flex;
+                flex-direction: column;
+                flex: 1;
+                height: 100%;
+            }
+
+            .tsm-content-title__wrapper {
+                margin-bottom: 0.5rem;
+            }
+
+            .tsm-content-category__wrapper {
+                margin-bottom: 0.5rem;
+            }
+
+            .tsm-content-excerpt__wrapper {
+                flex: 1;
+                margin-bottom: 0.5rem;
+            }
+
+            .tsm-content-read-more {
+                margin-top: auto;
+            }
+
+            /* Add transition for smooth animations */
+            .tsm-container * {
+                transition: all 0.3s ease;
+            }
+
+            .tsm-post-list-link:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            }
+        </style>
+        <?php
     }
 
 }
