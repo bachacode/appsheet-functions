@@ -159,6 +159,7 @@
 		display: flex;
 		flex-direction: column;
 		height: 100%;
+		overflow: hidden;
 	}
 
 	.tsm-post-list-element-content {
@@ -184,6 +185,7 @@
 		text-decoration: none;
 		position: relative;
 		z-index: 2;
+		margin-bottom: 1rem;
 	}
 
 	.tsm-post-list-card__image img {
@@ -197,7 +199,25 @@
 		display: flex;
 		flex-direction: column;
 		flex: 1;
-		height: 100%;
+		min-height: 0; /* Prevent content from expanding beyond container */
+	}
+
+	.tsm-content-title__wrapper {
+		margin-bottom: 0.5rem;
+	}
+
+	.tsm-content-category__wrapper {
+		margin-bottom: 0.75rem;
+	}
+
+	.tsm-content-excerpt__wrapper {
+		flex: 1; /* Allow excerpt to take remaining space */
+		overflow: hidden; /* Prevent overflow */
+		margin-bottom: 1rem;
+	}
+
+	.tsm-content-read-more__wrapper {
+		margin-top: auto; /* Push to bottom */
 	}
 
 	/* ==========================================================================
