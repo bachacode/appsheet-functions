@@ -1,4 +1,37 @@
 <style>
+	/* Main container layout */
+	.tsm-container {
+		display: grid;
+		grid-template-columns: 250px 1fr;
+		gap: 2rem;
+		align-items: start;
+	}
+
+	/* Make sidebar sticky */
+	.tsm-sidebar {
+		position: sticky;
+		top: 2rem;
+		height: fit-content;
+	}
+
+	/* Main content area */
+	.tsm-main-content {
+		min-width: 0; /* Prevent grid blowout */
+	}
+
+	/* Responsive layout */
+	@media (max-width: 768px) {
+		.tsm-container {
+			grid-template-columns: 1fr;
+		}
+
+		.tsm-sidebar {
+			position: relative;
+			top: 0;
+		}
+	}
+
+	/* Basic structural styles */
 	.tsm-post-list__wrapper {
 		display: grid;
 		width: 100%;
@@ -48,37 +81,85 @@
 		height: 100%;
 	}
 
-	.tsm-content-title__wrapper {
+	/* Basic list reset for categories */
+	.tsm-categories-list {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	/* Basic category item styles */
+	.tsm-categories-list__item {
 		margin-bottom: 0.5rem;
 	}
 
-	.tsm-content-title {
+	.tsm-categories-list__link {
+		display: flex;
+		align-items: center;
 		text-decoration: none;
-		display: block;
+		cursor: pointer;
+		padding: 0.5rem;
+		border-radius: 4px;
+	}
+
+	.tsm-categories-list__checkbox {
+		margin-right: 0.5rem;
+		appearance: none;
+		-webkit-appearance: none;
+		width: 16px;
+		height: 16px;
+		border: 2px solid #ccc;
+		border-radius: 3px;
 		position: relative;
-		z-index: 2;
+		cursor: pointer;
+		transition: all 0.2s ease;
 	}
 
-	.tsm-content-category__wrapper {
-		margin-bottom: 0.5rem;
+	.tsm-categories-list__checkbox:checked {
+		background-color: #4A5568;
+		border-color: #4A5568;
 	}
 
-	.tsm-content-excerpt__wrapper {
-		flex: 1;
-		margin-bottom: 0.5rem;
+	.tsm-categories-list__checkbox:checked::after {
+		content: '';
+		position: absolute;
+		left: 4px;
+		top: 1px;
+		width: 5px;
+		height: 9px;
+		border: solid white;
+		border-width: 0 2px 2px 0;
+		transform: rotate(45deg);
 	}
 
-	.tsm-content-read-more {
-		margin-top: auto;
-		text-decoration: none;
-		display: inline-block;
+	.tsm-categories-list__checkbox:hover {
+		border-color: #4A5568;
+	}
+
+	.tsm-categories-list__name {
+		color: #4A5568;
+		font-size: 14px;
+	}
+
+	.tsm-categories-list__badge {
+		margin-left: auto;
+	}
+
+	/* Basic search input styles */
+	.tsm-search-container {
 		position: relative;
-		z-index: 2;
+		width: 100%;
 	}
 
-	/* Add transition for smooth animations */
-	.tsm-container * {
-		transition: all 0.3s ease;
+	.tsm-search-input {
+		width: 100%;
+	}
+
+	.tsm-search-icon {
+		position: absolute;
+		right: 1rem;
+		top: 50%;
+		transform: translateY(-50%);
 	}
 
 	/* Hide Alpine.js content until it's ready */
@@ -90,80 +171,113 @@
 		margin-bottom: 1.5rem;
 	}
 
-	.tsm-search-container {
-		position: relative;
-		width: 100%;
+	.tsm-post-count strong {
+		color: #333;
 	}
 
-	.tsm-search-input {
-		width: 100%;
-		padding: 0.75rem 2.5rem 0.75rem 1rem;
+	.tsm-categories-list__link:hover {
+		background-color: #f0f0f0;
+		color: #333;
 	}
 
-	.tsm-search-icon {
-		position: absolute;
-		right: 1rem;
-		top: 50%;
-		transform: translateY(-50%);
+	.tsm-categories-list__link.active {
+		background-color: #e6e6e6;
+		color: #333;
+		font-weight: 500;
+	}
+
+	.tsm-categories-list__link:hover .tsm-categories-list__badge {
+		background-color: #e0e0e0;
 	}
 </style>
 
-{# Server-side rendered content #}
 <div class="tsm-main__wrapper">
 	<div class="tsm-container" x-data="postList_{{ unique_id }}()">
-		<div class="tsm-search-wrapper">
-			<div class="tsm-search-container">
-				<input 
-					type="text" 
-					class="tsm-search-input" 
-					placeholder="{{ settings.tsm_search_placeholder }}" 
-					x-model="searchQuery"
-				>
-				<i class="fas fa-search tsm-search-icon"></i>
+		{# Sidebar #}
+		<div class="tsm-sidebar">
+			<div class="tsm-post-count">
+				<strong x-text="filteredPosts.length">{{ posts|length }}</strong> resultados.
 			</div>
+
+			{% if categories != [] %}
+			<ul class="tsm-categories-list">
+				{% for terms in categories %}
+					<h3>{{ terms.title }}</h3>
+					{% for term in terms.taxonomy_list %}
+					<li class="tsm-categories-list__item">
+						<label class="tsm-categories-list__link">
+							<input 
+								type="checkbox" 
+								class="tsm-categories-list__checkbox" 
+								@click="filterByCategory('{{ term.slug }}')"
+								:checked="selectedCategories.has('{{ term.slug }}')"
+							>
+							<span class="tsm-categories-list__name">{{ term.name }}</span>
+						</label>
+					</li>
+					{% endfor %}
+				{% endfor %}
+			</ul>
+			{% endif %}
 		</div>
-		<div class="tsm-post-list__wrapper" x-ref="postsContainer">
-			{% for post in posts %}
-				<div class="tsm-post-list-element">
-					{% if settings.tsm_post_list_whole_post_linkable == 'yes' %}
-						<a href="{{ post.link }}" class="tsm-post-list-full-link" aria-label="{{ post.title }}"></a>
-					{% endif %}
-					<div class="tsm-post-list-element-content">
-						{% if settings.tsm_post_list_show_image == 'yes' and post.thumbnail %}
-							<a href="{{ post.link }}" class="tsm-post-list-card__image">
-								<img src="{{ post.thumbnail }}" alt="{{ post.title }}">
-							</a>
+
+		{# Main content #}
+		<div class="tsm-main-content">
+			<div class="tsm-search-wrapper">
+				<div class="tsm-search-container">
+					<input 
+						type="text" 
+						class="tsm-search-input" 
+						placeholder="{{ settings.tsm_search_placeholder }}" 
+						x-model="searchQuery"
+					>
+					<i class="fas fa-search tsm-search-icon"></i>
+				</div>
+			</div>
+
+			<div class="tsm-post-list__wrapper" x-ref="postsContainer">
+				{% for post in posts %}
+					<div class="tsm-post-list-element" data-terms='{{ post.terms|json_encode }}' data-taxonomies='{{ post.taxonomies|json_encode }}'>
+						{% if settings.tsm_post_list_whole_post_linkable == 'yes' %}
+							<a href="{{ post.link }}" class="tsm-post-list-full-link" aria-label="{{ post.title }}"></a>
 						{% endif %}
-						<div class="tsm-content">
-							{% if settings.tsm_post_list_show_title == 'yes' %}
-								<div class="tsm-content-title__wrapper">
-									<a href="{{ post.link }}" class="tsm-content-title">{{ post.title }}</a>
-								</div>
+						<div class="tsm-post-list-element-content">
+							{% if settings.tsm_post_list_show_image == 'yes' and post.thumbnail %}
+								<a href="{{ post.link }}" class="tsm-post-list-card__image">
+									<img src="{{ post.thumbnail }}" alt="{{ post.title }}">
+								</a>
 							{% endif %}
-							{% if settings.tsm_post_list_show_category == 'yes' and post.category_slug %}
-								<div class="tsm-content-category__wrapper">
-									<span class="tsm-content-category">
-										{% if settings.tsm_post_list_category_show_icon == 'yes' %}
-											<i class="{{ settings.tsm_post_list_category_icon.value }}"></i>
-										{% endif %}
-										<span>{{ post.category_name }}</span>
-									</span>
-								</div>
-							{% endif %}
-							{% if settings.tsm_post_list_show_excerpt == 'yes' %}
-								<div class="tsm-content-excerpt__wrapper">
-									<span class="tsm-content-excerpt">{{ post.excerpt }}</span>
-								</div>
-							{% endif %}
-							{% if settings.tsm_post_list_show_read_more == 'yes' %}
-								<div class="tsm-content-read-more__wrapper">
-									<a href="{{ post.link }}" class="tsm-content-read-more">{{ settings.tsm_post_list_read_more_text }}</a>
-								</div>
-							{% endif %}
+							<div class="tsm-content">
+								{% if settings.tsm_post_list_show_title == 'yes' %}
+									<div class="tsm-content-title__wrapper">
+										<a href="{{ post.link }}" class="tsm-content-title">{{ post.title }}</a>
+									</div>
+								{% endif %}
+								{% if settings.tsm_post_list_show_category == 'yes' and post.main_taxonomy %}
+									<div class="tsm-content-category__wrapper">
+										<span class="tsm-content-category">
+											{% if settings.tsm_post_list_category_show_icon == 'yes' %}
+												<i class="{{ settings.tsm_post_list_category_icon.value }}"></i>
+											{% endif %}
+											<span>{{ post.main_taxonomy }}</span>
+										</span>
+									</div>
+								{% endif %}
+								{% if settings.tsm_post_list_show_excerpt == 'yes' %}
+									<div class="tsm-content-excerpt__wrapper">
+										<span class="tsm-content-excerpt">{{ post.excerpt }}</span>
+									</div>
+								{% endif %}
+								{% if settings.tsm_post_list_show_read_more == 'yes' %}
+									<div class="tsm-content-read-more__wrapper">
+										<a href="{{ post.link }}" class="tsm-content-read-more">{{ settings.tsm_post_list_read_more_text }}</a>
+									</div>
+								{% endif %}
+							</div>
 						</div>
 					</div>
-				</div>
-			{% endfor %}
+				{% endfor %}
+			</div>
 		</div>
 	</div>
 </div>
@@ -174,26 +288,48 @@ function postList_{{ unique_id }}() {
 		posts: {{ posts|json_encode|raw }},
 		settings: {{ settings|json_encode|raw }},
 		searchQuery: '',
+		selectedCategories: new Set(),
 		
 		init() {
 			// Watch for changes in search query
 			this.$watch('searchQuery', () => this.filterPosts());
 		},
+
+		get filteredPosts() {
+			const query = this.searchQuery.toLowerCase();
+			return this.posts.filter(post => {
+				const matchesSearch = post.title.toLowerCase().includes(query);
+				const matchesCategory = this.selectedCategories.size === 0 || 
+					post.taxonomy_slugs.some(slug => this.selectedCategories.has(slug));
+				return matchesSearch && matchesCategory;
+			});
+		},
 		
 		filterPosts() {
-			const query = this.searchQuery.toLowerCase();
 			const posts = this.$refs.postsContainer.querySelectorAll('.tsm-post-list-element');
+			const query = this.searchQuery.toLowerCase();
 			
 			posts.forEach(post => {
 				const title = post.querySelector('.tsm-content-title')?.textContent.toLowerCase() || '';
-				const excerpt = post.querySelector('.tsm-content-excerpt')?.textContent.toLowerCase() || '';
-				const category = post.querySelector('.tsm-content-category span:last-child')?.textContent.toLowerCase() || '';
+				const terms = JSON.parse(post.getAttribute('data-terms'));
 				
-				const matches = 
-					title.includes(query);
+				const matchesSearch = title.includes(query);
+				const matchesCategory = this.selectedCategories.size === 0 || 
+					terms.some(term => this.selectedCategories.has(term));
 				
-				post.style.display = matches ? '' : 'none';
+				post.style.display = (matchesSearch && matchesCategory) ? '' : 'none';
 			});
+		},
+
+		filterByCategory(category) {
+			// Toggle category in Set
+			if (this.selectedCategories.has(category)) {
+				this.selectedCategories.delete(category);
+			} else {
+				this.selectedCategories.add(category);
+			}
+			
+			this.filterPosts();
 		}
 	}
 }

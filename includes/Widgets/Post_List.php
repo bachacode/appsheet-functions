@@ -78,27 +78,10 @@ class Post_List extends TSM_Widget_Base
                         'default' => 'categoria-de-expresion',
                         'options' => array(
                             'categoria-de-expresion' => esc_html__( 'Function Category', 'tailorsheet-manager' ),
-                            'sector-de-categoria'   => esc_html__('Example Sector', 'tailorsheet-manager'),
+                            'sector-de-ejemplo'   => esc_html__('Example Sector', 'tailorsheet-manager'),
                             'func-de-ejemplo'       => esc_html__('Example Functionality', 'tailorsheet-manager'),
                             'integracion-de-ejemplo' => esc_html__('Example Integration', 'tailorsheet-manager'),
                         ),
-                    ]
-                );
-
-                // Get all registered taxonomies
-                $taxonomies = get_taxonomies(['public' => false], 'objects');
-                $taxonomy_options = [];
-                foreach ($taxonomies as $taxonomy) {
-                    $taxonomy_options[$taxonomy->name] = $taxonomy->label;
-                }
-
-                $this->add_control(
-                    'tsm_post_list_terms',
-                    [
-                        'label'   => esc_html__( 'Terms', 'tailorsheet-manager' ),
-                        'type'    => \Elementor\Controls_Manager::SELECT2,
-                        'options' => $taxonomy_options,
-                        'multiple' => true,
                     ]
                 );
 
@@ -109,6 +92,50 @@ class Post_List extends TSM_Widget_Base
                         'type'      => \Elementor\Controls_Manager::TEXT,
                         'default'   => esc_html__('Search posts...', 'tailorsheet-manager'),
                         'separator' => 'before',
+                    ]
+                );
+            }
+        );
+
+        $this->register_generic_section(
+            'tsm_post_list_terms_section',
+            'Terms',
+            \Elementor\Controls_Manager::TAB_CONTENT,
+            function() {
+                $repeater = new \Elementor\Repeater();
+
+                $repeater->add_control(
+                    'term_title',
+                    [
+                        'label' => esc_html__( 'Terms Title', 'tailorsheet-manager' ),
+                        'type' => \Elementor\Controls_Manager::TEXT,
+                        'default' =>  esc_html__( 'Category', 'tailorsheet-manager' ),
+                    ]
+                );
+
+                $repeater->add_control(
+                    'term_slug',
+                    [
+                        'label' => esc_html__( 'Terms', 'tailorsheet-manager' ),
+                        'type' => \Elementor\Controls_Manager::SELECT,
+                        'options' => [
+                            'categoria-de-expresion' => esc_html__( 'Function Category', 'tailorsheet-manager' ),
+                            'sector-de-ejemplo'   => esc_html__('Example Sector', 'tailorsheet-manager'),
+                            'func-de-ejemplo'       => esc_html__('Example Functionality', 'tailorsheet-manager'),
+                            'integracion-de-ejemplo' => esc_html__('Example Integration', 'tailorsheet-manager'),
+                        ],
+                        'default' => 'categoria-de-expresion'
+                    ]
+                );
+                
+
+                $this->add_control(
+                    'tsm_post_list_terms_filter',
+                    [
+                        'label'   => esc_html__( 'Taxonomies', 'tailorsheet-manager' ),
+                        'type'    => \Elementor\Controls_Manager::REPEATER,
+                        'fields' => $repeater->get_controls(),
+                        'title_field' => '{{{ term_title }}}'
                     ]
                 );
             }
@@ -315,6 +342,44 @@ class Post_List extends TSM_Widget_Base
                         'size_units' => ['px', 'em', '%'],
                         'selectors' => [
                             '{{WRAPPER}} .tsm-search-wrapper' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                        ],
+                    ]
+                );
+            }
+        );
+
+        $this->register_generic_section(    
+            'tsm_sidebar_style_section',
+            'Sidebar',
+            \Elementor\Controls_Manager::TAB_STYLE,
+            function() {
+                $this->register_generic_controls(
+                    'post_list_sidebar',
+                    '.tsm-sidebar'
+                )
+                ->withBackground()
+                ->withBorder()
+                ->withDimension()
+                ->build();
+
+                $this->add_control(
+                    'tsm_sidebar_checkbox_spacing',
+                    [
+                        'label'     => esc_html__('Checkbox Spacing', 'tailorsheet-manager'),
+                        'type'      => \Elementor\Controls_Manager::SLIDER,
+                        'size_units' => ['px'],
+                        'range'     => [
+                            'px' => [
+                                'min' => 0,
+                                'max' => 100,
+                            ],
+                        ],
+                        'default'   => [
+                            'unit' => 'px',
+                            'size' => 10,
+                        ], 
+                        'selectors' => [
+                            '{{WRAPPER}} .tsm-categories-list__checkbox' => 'margin-right: {{SIZE}}{{UNIT}};',
                         ],
                     ]
                 );
@@ -592,6 +657,42 @@ class Post_List extends TSM_Widget_Base
         // Generate a unique ID for this widget instance
         $unique_id = 'tsm_' . $this->get_id();
 
+        // Get selected taxonomies
+        if($settings['tsm_post_list_terms_filter']) {
+            $selected_taxonomies = $settings['tsm_post_list_terms_filter'];
+        } else {
+            $selected_taxonomies = [];
+        }
+
+        $main_taxonomy = $settings['tsm_post_list_taxonomy'];
+        
+        // Initialize categories array to store terms from all selected taxonomies
+        $all_categories = [];
+        
+        // Query terms for each selected taxonomy
+        foreach ($selected_taxonomies as $taxonomy) {
+            $terms = get_terms([
+                'taxonomy' => $taxonomy['term_slug'],
+                'hide_empty' => false,
+            ]);
+            
+            $all_categories[$taxonomy['term_slug']] = [
+                'title' => $taxonomy['term_title'],
+                'taxonomy_list' => []
+            ];
+
+            if (!is_wp_error($terms) && !empty($terms)) {
+                foreach ($terms as $term) {
+                    $all_categories[$taxonomy['term_slug']]['taxonomy_list'][] = [
+                        'name' => $term->name,
+                        'slug' => $term->slug,
+                        'taxonomy' => $taxonomy,
+                        'term_id' => $term->term_id
+                    ];
+                }
+            }
+        }
+
         // Fetch posts
         $args = [
             'post_type'      => $settings['tsm_post_list_source'],
@@ -602,34 +703,45 @@ class Post_List extends TSM_Widget_Base
 
         while ($query->have_posts()) {
             $query->the_post();
-            $terms = get_the_terms(get_the_ID(), $settings['tsm_post_list_taxonomy']);
-            $category_slug = '';
-            $category_name = '';
+            $post_terms = [];
+            $post_taxonomies = [];
             
-            if ($terms && !is_wp_error($terms) && !empty($terms)) {
-                $first_term = reset($terms);
-                $category_slug = esc_attr($first_term->slug);
-                $category_name = esc_html($first_term->name);
+            // Get terms from all selected taxonomies for this post
+            foreach ($selected_taxonomies as $taxonomy) {
+                $terms = get_the_terms(get_the_ID(), $taxonomy['term_slug']);
+                if ($terms && !is_wp_error($terms)) {
+                    foreach ($terms as $term) {
+                        $post_terms[] = $term->slug;
+                        $post_taxonomies[$term->slug] = [
+                            'slug' => $term->slug,
+                            'name' => $term->name,
+                            'taxonomy' => $taxonomy['term_slug'],
+                            'term_id' => $term->term_id
+                        ];
+                    }
+                }
             }
 
             $posts[] = [
-                'id'        => get_the_ID(),
-                'title'     => get_the_title(),
-                'excerpt'   => get_the_excerpt(),
-                'link'      => get_permalink(),
-                'thumbnail' => get_the_post_thumbnail_url(get_the_ID(), 'medium'),
-                'category_slug' => $category_slug,
-                'category_name' => $category_name,
+                'id'         => get_the_ID(),
+                'title'      => get_the_title(),
+                'excerpt'    => get_the_excerpt(),
+                'link'       => get_permalink(),
+                'thumbnail'  => get_the_post_thumbnail_url(get_the_ID(), 'medium'),
+                'terms'      => $post_terms,
+                'taxonomies' => $post_taxonomies,
+                'main_taxonomy' => !empty($main_taxonomy) ? get_the_terms(get_the_ID(), $main_taxonomy)[0]->name : '',
+                'taxonomy_slugs' => array_keys($post_taxonomies)
             ];
         }
         wp_reset_postdata();
 
         Helpers::render_twig_template('post-list.html.twig', [
-            'posts'      => $posts,
-            'settings'   => $settings,
-            'unique_id'  => $unique_id
+            'posts'       => $posts,
+            'settings'    => $settings,
+            'unique_id'   => $unique_id,
+            'categories'  => $all_categories
         ]);
-        
     }
 
 }
