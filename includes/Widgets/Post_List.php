@@ -362,8 +362,75 @@ class Post_List extends TSM_Widget_Base
                 ->withDimension()
                 ->build();
 
+            }
+        );
+
+        $this->register_generic_section(    
+            'tsm_post_count_style_section',
+            'Post Count',
+            \Elementor\Controls_Manager::TAB_STYLE,
+            function() {
+                $this->register_generic_controls(
+                    'post_list_post_count',
+                    '.tsm-post-count'
+                )
+                ->withText()
+                ->withDimension()
+                ->build();
+
+            }
+        );
+
+        $this->register_generic_section(    
+            'tsm_categories_list_style_section',
+            'Categories List',
+            \Elementor\Controls_Manager::TAB_STYLE,
+            function() {
+                $this->register_generic_controls(
+                    'post_list_categories_list',
+                    '.tsm-categories-list'
+                )
+                ->withBackground()
+                ->withBorder()
+                ->withDimension()
+                ->build();
+
+
                 $this->add_control(
-                    'tsm_sidebar_checkbox_spacing',
+                    'tsm_categories_list_title_text_heading ',
+                    [
+                        'label'     => esc_html__('Title Text', 'tailorsheet-manager'),
+                        'type'      => \Elementor\Controls_Manager::HEADING,
+                        'separator' => 'before',
+                    ]
+                );
+                
+                $this->register_generic_controls(
+                    'tsm_categories_list_title_text',
+                    '.tsm-categories-list__title'
+                )
+                ->withText()
+                ->build();
+
+                $this->add_control(
+                    'tsm_categories_list_category_name_text_heading ',
+                    [
+                        'label'     => esc_html__('Category Name Text', 'tailorsheet-manager'),
+                        'type'      => \Elementor\Controls_Manager::HEADING,
+                        'separator' => 'before',
+                    ]
+                );
+                
+                $this->register_generic_controls(
+                    'tsm_categories_list_category_name_text',
+                    '.tsm-categories-list__name'
+                )
+                ->withText()
+                ->build();
+            
+
+                $this->add_control(
+                    'tsm_categories_list_checkbox_spacing',
                     [
                         'label'     => esc_html__('Checkbox Spacing', 'tailorsheet-manager'),
                         'type'      => \Elementor\Controls_Manager::SLIDER,
