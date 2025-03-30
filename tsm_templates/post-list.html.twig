@@ -1,0 +1,88 @@
+<div class="tsm-main__wrapper">
+	<div class="tsm-container">
+		{# Sidebar #}
+		<div class="tsm-sidebar">
+			<div class="tsm-post-count">
+				<strong>{{ posts|length }}</strong> resultados.
+			</div>
+
+			{% if categories != [] %}
+			<ul class="tsm-categories-list">
+				{% for terms in categories %}
+					<h3 class="tsm-categories-list__title">{{ terms.title }}</h3>
+					{% for term in terms.taxonomy_list %}
+					<li class="tsm-categories-list__item">
+						<label class="tsm-categories-list__link">
+							<input 
+								type="checkbox" 
+								class="tsm-categories-list__checkbox" 
+								data-category="{{ term.slug }}"
+							>
+							<span class="tsm-categories-list__name">{{ term.name }}</span>
+						</label>
+					</li>
+					{% endfor %}
+				{% endfor %}
+			</ul>
+			{% endif %}
+		</div>
+
+		{# Main content #}
+		<div class="tsm-main-content">
+			<div class="tsm-search-wrapper">
+				<div class="tsm-search-container">
+					<input 
+						type="text" 
+						class="tsm-search-input" 
+						placeholder="{{ settings.tsm_search_placeholder }}"
+					>
+					<i class="fas fa-search tsm-search-icon"></i>
+				</div>
+			</div>
+
+			<div class="tsm-post-list__wrapper">
+				{% for post in posts %}
+					<div class="tsm-post-list-element" data-terms='{{ post.terms|json_encode }}' data-taxonomies='{{ post.taxonomies|json_encode }}'>
+						{% if settings.tsm_post_list_whole_post_linkable == 'yes' %}
+							<a href="{{ post.link }}" class="tsm-post-list-full-link" aria-label="{{ post.title }}"></a>
+						{% endif %}
+						<div class="tsm-post-list-element-content">
+							{% if settings.tsm_post_list_show_image == 'yes' and post.thumbnail %}
+								<a href="{{ post.link }}" class="tsm-post-list-card__image">
+									<img src="{{ post.thumbnail }}" alt="{{ post.title }}">
+								</a>
+							{% endif %}
+							<div class="tsm-content">
+								{% if settings.tsm_post_list_show_title == 'yes' %}
+									<div class="tsm-content-title__wrapper">
+										<a href="{{ post.link }}" class="tsm-content-title">{{ post.title }}</a>
+									</div>
+								{% endif %}
+								{% if settings.tsm_post_list_show_category == 'yes' and post.main_taxonomy %}
+									<div class="tsm-content-category__wrapper">
+										<span class="tsm-content-category">
+											{% if settings.tsm_post_list_category_show_icon == 'yes' %}
+												<i class="{{ settings.tsm_post_list_category_icon.value }}"></i>
+											{% endif %}
+											<span>{{ post.main_taxonomy }}</span>
+										</span>
+									</div>
+								{% endif %}
+								{% if settings.tsm_post_list_show_excerpt == 'yes' %}
+									<div class="tsm-content-excerpt__wrapper">
+										<span class="tsm-content-excerpt">{{ post.excerpt }}</span>
+									</div>
+								{% endif %}
+								{% if settings.tsm_post_list_show_read_more == 'yes' %}
+									<div class="tsm-content-read-more__wrapper">
+										<a href="{{ post.link }}" class="tsm-content-read-more">{{ settings.tsm_post_list_read_more_text }}</a>
+									</div>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+</div> 

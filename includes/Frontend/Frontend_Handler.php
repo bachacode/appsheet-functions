@@ -87,6 +87,10 @@ class Frontend_Handler
          */
 
         wp_enqueue_script( $this->plugin_name, Helpers::public_assets('js/tailorsheet-manager-public.js'), array( 'jquery' ), $this->version, false);
+        
+        // AlpineJS
+        wp_register_script( $this->plugin_name . "-alpinejs", Helpers::public_assets('js/alpinejs.min.js'), array(), $this->version, array ( 'strategy' => 'defer' ));
+        
         // Register searchbar JS Script
         wp_register_script( $this->plugin_name . '-main', Helpers::public_assets('js/tailorsheet-manager-main.js'), array( 'jquery' ), $this->version, false);
 

@@ -16,7 +16,7 @@ wp_enqueue_script($handle);
 wp_enqueue_style($handle);
 ?>
 
-<div class="af-main__wrapper">
+<div class="tsm-main__wrapper">
 	<!-- Categorias de expresiones -->
 	<form id="categoryForm" class="af-form-category" method="POST">
 		<div class="af-form-category-container">

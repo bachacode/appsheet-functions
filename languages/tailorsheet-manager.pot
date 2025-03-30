@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-2.0+.
 msgid ""
 msgstr ""
-"Project-Id-Version: TailorSheet Manager 2.5.4\n"
+"Project-Id-Version: TailorSheet Manager 2.7.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/tailorsheet-manager\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-03-23T22:25:03+00:00\n"
+"POT-Creation-Date: 2025-03-30T19:09:16+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: tailorsheet-manager\n"
@@ -256,6 +256,7 @@ msgstr ""
 
 #: includes/Core/Post_Types.php:295
 #: includes/Core/Post_Types.php:296
+#: includes/Widgets/Post_List.php:67
 msgid "Appsheet Functions"
 msgstr ""
 
@@ -264,6 +265,8 @@ msgid "Function Categories"
 msgstr ""
 
 #: includes/Core/Post_Types.php:326
+#: includes/Widgets/Post_List.php:80
+#: includes/Widgets/Post_List.php:122
 msgid "Function Category"
 msgstr ""
 
@@ -281,6 +284,7 @@ msgstr ""
 
 #: includes/Core/Post_Types.php:352
 #: includes/Core/Post_Types.php:355
+#: includes/Widgets/Post_List.php:68
 msgid "AppSheet Examples"
 msgstr ""
 
@@ -293,6 +297,8 @@ msgid "Example Sectors"
 msgstr ""
 
 #: includes/Core/Post_Types.php:393
+#: includes/Widgets/Post_List.php:81
+#: includes/Widgets/Post_List.php:123
 msgid "Example Sector"
 msgstr ""
 
@@ -301,6 +307,8 @@ msgid "Example Functionalities"
 msgstr ""
 
 #: includes/Core/Post_Types.php:401
+#: includes/Widgets/Post_List.php:82
+#: includes/Widgets/Post_List.php:124
 msgid "Example Functionality"
 msgstr ""
 
@@ -309,6 +317,8 @@ msgid "Example Integrations"
 msgstr ""
 
 #: includes/Core/Post_Types.php:409
+#: includes/Widgets/Post_List.php:83
+#: includes/Widgets/Post_List.php:125
 msgid "Example Integration"
 msgstr ""
 
@@ -325,14 +335,17 @@ msgid "First Opened"
 msgstr ""
 
 #: includes/Widgets/Accordion.php:68
+#: includes/Widgets/Post_List.php:180
 msgid "Yes"
 msgstr ""
 
 #: includes/Widgets/Accordion.php:69
+#: includes/Widgets/Post_List.php:181
 msgid "No"
 msgstr ""
 
 #: includes/Widgets/Accordion.php:77
+#: includes/Widgets/Post_List.php:63
 msgid "Source"
 msgstr ""
 
@@ -398,6 +411,7 @@ msgstr ""
 #: includes/Widgets/Accordion.php:257
 #: includes/Widgets/Accordion.php:325
 #: includes/Widgets/Accordion.php:424
+#: includes/Widgets/TSM_Control_Builder.php:273
 msgid "Background Color"
 msgstr ""
 
@@ -409,24 +423,30 @@ msgstr ""
 #: includes/Widgets/Accordion.php:281
 #: includes/Widgets/Accordion.php:348
 #: includes/Widgets/Accordion.php:436
+#: includes/Widgets/TSM_Control_Builder.php:327
 msgid "Border"
 msgstr ""
 
 #: includes/Widgets/Accordion.php:289
+#: includes/Widgets/TSM_Control_Builder.php:336
 msgid "Border Radius"
 msgstr ""
 
 #: includes/Widgets/Accordion.php:356
 #: includes/Widgets/Accordion.php:444
+#: includes/Widgets/TSM_Control_Builder.php:412
 msgid "Padding"
 msgstr ""
 
 #: includes/Widgets/Accordion.php:368
+#: includes/Widgets/Post_List.php:340
+#: includes/Widgets/TSM_Control_Builder.php:424
 msgid "Margin"
 msgstr ""
 
 #: includes/Widgets/Accordion.php:381
 #: includes/Widgets/Accordion.php:457
+#: includes/Widgets/TSM_Control_Builder.php:455
 msgid "Typography"
 msgstr ""
 
@@ -474,17 +494,218 @@ msgstr ""
 msgid "Appsheet Functions Explanation"
 msgstr ""
 
-#: includes/Widgets/AppSheet_Functions_List.php:16
-msgid "Appsheet Functions List"
+#: includes/Widgets/Post_List.php:16
+msgid "Post List"
+msgstr ""
+
+#: includes/Widgets/Post_List.php:76
+msgid "Main Taxonomy"
+msgstr ""
+
+#: includes/Widgets/Post_List.php:91
+msgid "Search Placeholder"
+msgstr ""
+
+#: includes/Widgets/Post_List.php:93
+msgid "Search posts..."
+msgstr ""
+
+#: includes/Widgets/Post_List.php:110
+msgid "Terms Title"
+msgstr ""
+
+#: includes/Widgets/Post_List.php:112
+#: tsm_templates/af-appsheet-functions-main.php:24
+msgid "Category"
+msgstr ""
+
+#: includes/Widgets/Post_List.php:119
+msgid "Terms"
+msgstr ""
+
+#: includes/Widgets/Post_List.php:135
+msgid "Taxonomies"
+msgstr ""
+
+#: includes/Widgets/Post_List.php:155
+msgid "Columns"
+msgstr ""
+
+#: includes/Widgets/Post_List.php:177
+msgid "Make Whole Post Linkable"
+msgstr ""
+
+#: includes/Widgets/Post_List.php:189
+msgid "Show Featured Image"
+msgstr ""
+
+#: includes/Widgets/Post_List.php:192
+#: includes/Widgets/Post_List.php:203
+#: includes/Widgets/Post_List.php:214
+#: includes/Widgets/Post_List.php:239
+#: includes/Widgets/Post_List.php:250
+#: includes/Widgets/Post_List.php:261
+msgid "Show"
+msgstr ""
+
+#: includes/Widgets/Post_List.php:193
+#: includes/Widgets/Post_List.php:204
+#: includes/Widgets/Post_List.php:215
+#: includes/Widgets/Post_List.php:240
+#: includes/Widgets/Post_List.php:251
+#: includes/Widgets/Post_List.php:262
+msgid "Hide"
+msgstr ""
+
+#: includes/Widgets/Post_List.php:200
+msgid "Show Category"
+msgstr ""
+
+#: includes/Widgets/Post_List.php:211
+msgid "Show Category Icon"
+msgstr ""
+
+#: includes/Widgets/Post_List.php:221
+msgid "Category Icon"
+msgstr ""
+
+#: includes/Widgets/Post_List.php:236
+msgid "Show Title"
+msgstr ""
+
+#: includes/Widgets/Post_List.php:247
+msgid "Show Excerpt"
+msgstr ""
+
+#: includes/Widgets/Post_List.php:258
+msgid "Show Read More"
+msgstr ""
+
+#: includes/Widgets/Post_List.php:269
+msgid "Read More Text"
+msgstr ""
+
+#: includes/Widgets/Post_List.php:271
+msgid "Read More"
+msgstr ""
+
+#: includes/Widgets/Post_List.php:303
+msgid "Icon Color"
+msgstr ""
+
+#: includes/Widgets/Post_List.php:314
+msgid "Max Width"
+msgstr ""
+
+#: includes/Widgets/Post_List.php:402
+msgid "Title Text"
+msgstr ""
+
+#: includes/Widgets/Post_List.php:418
+msgid "Category Name Text"
+msgstr ""
+
+#: includes/Widgets/Post_List.php:435
+msgid "Checkbox Spacing"
+msgstr ""
+
+#: includes/Widgets/Post_List.php:473
+msgid "Gap"
+msgstr ""
+
+#: includes/Widgets/Post_List.php:485
+msgid "List Width (px)"
+msgstr ""
+
+#: includes/Widgets/Post_List.php:513
+msgid "Element Width (px)"
+msgstr ""
+
+#: includes/Widgets/Post_List.php:663
+msgid "Image Height (px)"
+msgstr ""
+
+#: includes/Widgets/TSM_Control_Builder.php:253
+msgid "Background Options"
+msgstr ""
+
+#: includes/Widgets/TSM_Control_Builder.php:266
+#: includes/Widgets/TSM_Control_Builder.php:352
+#: includes/Widgets/TSM_Control_Builder.php:467
+#: includes/Widgets/TSM_Control_Builder.php:550
+msgid "Normal"
+msgstr ""
+
+#: includes/Widgets/TSM_Control_Builder.php:286
+#: includes/Widgets/TSM_Control_Builder.php:372
+#: includes/Widgets/TSM_Control_Builder.php:487
+#: includes/Widgets/TSM_Control_Builder.php:568
+msgid "Hover"
+msgstr ""
+
+#: includes/Widgets/TSM_Control_Builder.php:293
+msgid "Background Color (Hover)"
+msgstr ""
+
+#: includes/Widgets/TSM_Control_Builder.php:317
+msgid "Border Options"
+msgstr ""
+
+#: includes/Widgets/TSM_Control_Builder.php:359
+msgid "Border Color"
+msgstr ""
+
+#: includes/Widgets/TSM_Control_Builder.php:379
+msgid "Border Color (Hover)"
+msgstr ""
+
+#: includes/Widgets/TSM_Control_Builder.php:403
+msgid "Dimensions Options"
+msgstr ""
+
+#: includes/Widgets/TSM_Control_Builder.php:445
+msgid "Typography Options"
+msgstr ""
+
+#: includes/Widgets/TSM_Control_Builder.php:474
+msgid "Text Color"
+msgstr ""
+
+#: includes/Widgets/TSM_Control_Builder.php:494
+msgid "Text Color (Hover)"
+msgstr ""
+
+#: includes/Widgets/TSM_Control_Builder.php:511
+msgid "Text Align"
+msgstr ""
+
+#: includes/Widgets/TSM_Control_Builder.php:515
+msgid "Left"
+msgstr ""
+
+#: includes/Widgets/TSM_Control_Builder.php:516
+msgid "Center"
+msgstr ""
+
+#: includes/Widgets/TSM_Control_Builder.php:517
+msgid "Right"
+msgstr ""
+
+#: includes/Widgets/TSM_Control_Builder.php:537
+msgid "Shadow Options"
+msgstr ""
+
+#: includes/Widgets/TSM_Control_Builder.php:558
+msgid "Box Shadow"
+msgstr ""
+
+#: includes/Widgets/TSM_Control_Builder.php:576
+msgid "Box Shadow (Hover)"
 msgstr ""
 
 #: tsm_templates/af-admin-function-example-fields.php:5
 #: tsm_templates/af-admin-function-example-fields.php:19
 msgid "Example use"
-msgstr ""
-
-#: tsm_templates/af-appsheet-functions-main.php:24
-msgid "Category"
 msgstr ""
 
 #: tsm_templates/af-appsheet-functions-main.php:44
