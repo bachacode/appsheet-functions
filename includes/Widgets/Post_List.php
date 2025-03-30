@@ -6,6 +6,36 @@ use TailorSheet_Manager\Helpers;
 
 class Post_List extends TSM_Widget_Base
 {
+    public function __construct( $data = [], $args = null ) {
+		parent::__construct( $data, $args );
+
+		$is_type_instance = $this->is_type_instance();
+
+		if ( ! $is_type_instance && null === $args ) {
+			throw new \Exception( '`$args` argument is required when initializing a full widget instance.' );
+		}
+
+		if ( $is_type_instance) {
+		    // Enqueue styles
+            wp_enqueue_style(
+                'tsm-post-list-css', 
+                Helpers::public_assets('css/post-list.css'), 
+                array(), 
+                '1.0.0', 
+                'all'
+            );
+    
+            // Enqueue our script
+            wp_enqueue_script(
+                'tsm-post-list-js', 
+                Helpers::public_assets('js/post-list.js'),
+                array('jquery'),
+                '1.0.0',
+                true
+            );
+		}
+	}
+
     public function get_name()
     {
         return 'tsm_post_list';
@@ -710,24 +740,6 @@ class Post_List extends TSM_Widget_Base
 
     protected function render()
     {
-        // Enqueue styles
-        wp_enqueue_style(
-            'tsm-post-list-css', 
-            Helpers::public_assets('css/post-list.css'), 
-            array(), 
-            '1.0.0', 
-            'all'
-        );
-
-        // Enqueue our script
-        wp_enqueue_script(
-            'tsm-post-list-js', 
-            Helpers::public_assets('js/post-list.js'),
-            array('jquery'),
-            '1.0.0',
-            true
-        );
-
         $settings = $this->get_settings_for_display();
         
         // Generate a unique ID for this widget instance
