@@ -184,7 +184,6 @@
   text-decoration: none;
   position: relative;
   z-index: 2;
-  margin-bottom: 1rem;
 }
 
 .tsm-post-list-card__image img {
@@ -199,14 +198,6 @@
   flex-direction: column;
   flex: 1;
   min-height: 0; /* Prevent content from expanding beyond container */
-}
-
-.tsm-content-title__wrapper {
-  margin-bottom: 0.5rem;
-}
-
-.tsm-content-category__wrapper {
-  margin-bottom: 0.75rem;
 }
 
 .tsm-content-excerpt__wrapper {
