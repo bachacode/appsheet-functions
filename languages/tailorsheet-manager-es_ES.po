@@ -3,8 +3,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/tailorsheet-"
 "manager\n"
-"POT-Creation-Date: 2025-03-25T22:05:25+00:00\n"
-"PO-Revision-Date: 2025-03-25 18:06-0400\n"
+"POT-Creation-Date: 2025-03-30T19:09:16+00:00\n"
+"PO-Revision-Date: 2025-03-30 15:18-0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: es\n"
@@ -250,7 +250,7 @@ msgid "Appsheet Function"
 msgstr "Expresión AppSheet"
 
 #: includes/Core/Post_Types.php:295 includes/Core/Post_Types.php:296
-#: includes/Widgets/Post_List.php:65
+#: includes/Widgets/Post_List.php:67
 msgid "Appsheet Functions"
 msgstr "Expresiones de AppSheet"
 
@@ -258,7 +258,8 @@ msgstr "Expresiones de AppSheet"
 msgid "Function Categories"
 msgstr "Categorías de expresión"
 
-#: includes/Core/Post_Types.php:326
+#: includes/Core/Post_Types.php:326 includes/Widgets/Post_List.php:80
+#: includes/Widgets/Post_List.php:122
 msgid "Function Category"
 msgstr "Categoría de expresión"
 
@@ -275,7 +276,7 @@ msgid "AppSheet Example"
 msgstr "Ejemplo de App"
 
 #: includes/Core/Post_Types.php:352 includes/Core/Post_Types.php:355
-#: includes/Widgets/Post_List.php:66
+#: includes/Widgets/Post_List.php:68
 msgid "AppSheet Examples"
 msgstr "Ejemplos de App"
 
@@ -287,7 +288,8 @@ msgstr "Ejemplos de App"
 msgid "Example Sectors"
 msgstr "Sectores de App"
 
-#: includes/Core/Post_Types.php:393
+#: includes/Core/Post_Types.php:393 includes/Widgets/Post_List.php:81
+#: includes/Widgets/Post_List.php:123
 msgid "Example Sector"
 msgstr "Sector de App"
 
@@ -295,7 +297,8 @@ msgstr "Sector de App"
 msgid "Example Functionalities"
 msgstr "Funcionalidades de App"
 
-#: includes/Core/Post_Types.php:401
+#: includes/Core/Post_Types.php:401 includes/Widgets/Post_List.php:82
+#: includes/Widgets/Post_List.php:124
 msgid "Example Functionality"
 msgstr "Funcionalidad de App"
 
@@ -303,7 +306,8 @@ msgstr "Funcionalidad de App"
 msgid "Example Integrations"
 msgstr "Integraciones de App"
 
-#: includes/Core/Post_Types.php:409
+#: includes/Core/Post_Types.php:409 includes/Widgets/Post_List.php:83
+#: includes/Widgets/Post_List.php:125
 msgid "Example Integration"
 msgstr "Integración de App"
 
@@ -319,15 +323,15 @@ msgstr "Básico"
 msgid "First Opened"
 msgstr "Primera apertura"
 
-#: includes/Widgets/Accordion.php:68
+#: includes/Widgets/Accordion.php:68 includes/Widgets/Post_List.php:180
 msgid "Yes"
 msgstr "Sí"
 
-#: includes/Widgets/Accordion.php:69
+#: includes/Widgets/Accordion.php:69 includes/Widgets/Post_List.php:181
 msgid "No"
 msgstr "No"
 
-#: includes/Widgets/Accordion.php:77 includes/Widgets/Post_List.php:61
+#: includes/Widgets/Accordion.php:77 includes/Widgets/Post_List.php:63
 msgid "Source"
 msgstr "Fuente"
 
@@ -389,6 +393,7 @@ msgstr "Objeto"
 
 #: includes/Widgets/Accordion.php:257 includes/Widgets/Accordion.php:325
 #: includes/Widgets/Accordion.php:424
+#: includes/Widgets/TSM_Control_Builder.php:273
 msgid "Background Color"
 msgstr "Background Color"
 
@@ -398,22 +403,27 @@ msgstr "Background Color Active"
 
 #: includes/Widgets/Accordion.php:281 includes/Widgets/Accordion.php:348
 #: includes/Widgets/Accordion.php:436
+#: includes/Widgets/TSM_Control_Builder.php:327
 msgid "Border"
 msgstr "Border"
 
 #: includes/Widgets/Accordion.php:289
+#: includes/Widgets/TSM_Control_Builder.php:336
 msgid "Border Radius"
 msgstr "Border Radius"
 
 #: includes/Widgets/Accordion.php:356 includes/Widgets/Accordion.php:444
+#: includes/Widgets/TSM_Control_Builder.php:412
 msgid "Padding"
 msgstr "Padding"
 
-#: includes/Widgets/Accordion.php:368
+#: includes/Widgets/Accordion.php:368 includes/Widgets/Post_List.php:340
+#: includes/Widgets/TSM_Control_Builder.php:424
 msgid "Margin"
 msgstr "Margin"
 
 #: includes/Widgets/Accordion.php:381 includes/Widgets/Accordion.php:457
+#: includes/Widgets/TSM_Control_Builder.php:455
 msgid "Typography"
 msgstr "Typography"
 
@@ -465,18 +475,209 @@ msgstr "Ejemplos de las expresiones AppSheet"
 msgid "Post List"
 msgstr "Lista de entradas"
 
-#: includes/Widgets/Post_List.php:53
-msgid "Query"
-msgstr "Consulta"
+#: includes/Widgets/Post_List.php:76
+msgid "Main Taxonomy"
+msgstr "Taxonomía principal"
+
+#: includes/Widgets/Post_List.php:91
+msgid "Search Placeholder"
+msgstr "Placeholder de buscador"
+
+#: includes/Widgets/Post_List.php:93
+msgid "Search posts..."
+msgstr "Buscar entradas..."
+
+#: includes/Widgets/Post_List.php:110
+msgid "Terms Title"
+msgstr "Titulo de términos"
+
+#: includes/Widgets/Post_List.php:112
+#: tsm_templates/af-appsheet-functions-main.php:24
+msgid "Category"
+msgstr "Categoría"
+
+#: includes/Widgets/Post_List.php:119
+msgid "Terms"
+msgstr "Términos"
+
+#: includes/Widgets/Post_List.php:135
+msgid "Taxonomies"
+msgstr "Taxonomías"
+
+#: includes/Widgets/Post_List.php:155
+msgid "Columns"
+msgstr "Columnas"
+
+#: includes/Widgets/Post_List.php:177
+msgid "Make Whole Post Linkable"
+msgstr "Convertir toda la entrada en link"
+
+#: includes/Widgets/Post_List.php:189
+msgid "Show Featured Image"
+msgstr "Mostrar miniatura"
+
+#: includes/Widgets/Post_List.php:192 includes/Widgets/Post_List.php:203
+#: includes/Widgets/Post_List.php:214 includes/Widgets/Post_List.php:239
+#: includes/Widgets/Post_List.php:250 includes/Widgets/Post_List.php:261
+msgid "Show"
+msgstr "Mostrar"
+
+#: includes/Widgets/Post_List.php:193 includes/Widgets/Post_List.php:204
+#: includes/Widgets/Post_List.php:215 includes/Widgets/Post_List.php:240
+#: includes/Widgets/Post_List.php:251 includes/Widgets/Post_List.php:262
+msgid "Hide"
+msgstr "Esconder"
+
+#: includes/Widgets/Post_List.php:200
+msgid "Show Category"
+msgstr "Mostrar categoría"
+
+#: includes/Widgets/Post_List.php:211
+msgid "Show Category Icon"
+msgstr "Mostrar icono de categoría"
+
+#: includes/Widgets/Post_List.php:221
+msgid "Category Icon"
+msgstr "Icono de categoría"
+
+#: includes/Widgets/Post_List.php:236
+msgid "Show Title"
+msgstr "Mostrar titulo"
+
+#: includes/Widgets/Post_List.php:247
+msgid "Show Excerpt"
+msgstr "Mostrar extracto"
+
+#: includes/Widgets/Post_List.php:258
+msgid "Show Read More"
+msgstr "Mostrar ver más"
+
+#: includes/Widgets/Post_List.php:269
+msgid "Read More Text"
+msgstr "Texto de ver más"
+
+#: includes/Widgets/Post_List.php:271
+msgid "Read More"
+msgstr "Ver más"
+
+#: includes/Widgets/Post_List.php:303
+msgid "Icon Color"
+msgstr "Color del icono"
+
+#: includes/Widgets/Post_List.php:314
+msgid "Max Width"
+msgstr "Ancho maximo"
+
+#: includes/Widgets/Post_List.php:402
+msgid "Title Text"
+msgstr "Texto del titulo"
+
+#: includes/Widgets/Post_List.php:418
+msgid "Category Name Text"
+msgstr "Texto de la categoría"
+
+#: includes/Widgets/Post_List.php:435
+msgid "Checkbox Spacing"
+msgstr "Espaciado de la casilla"
+
+#: includes/Widgets/Post_List.php:473
+msgid "Gap"
+msgstr "Gap"
+
+#: includes/Widgets/Post_List.php:485
+msgid "List Width (px)"
+msgstr "Ancho de la lista (px)"
+
+#: includes/Widgets/Post_List.php:513
+msgid "Element Width (px)"
+msgstr "Ancho del elemento (px)"
+
+#: includes/Widgets/Post_List.php:663
+msgid "Image Height (px)"
+msgstr "Altura de la imagen (px)"
+
+#: includes/Widgets/TSM_Control_Builder.php:253
+msgid "Background Options"
+msgstr "Opciones del fondo"
+
+#: includes/Widgets/TSM_Control_Builder.php:266
+#: includes/Widgets/TSM_Control_Builder.php:352
+#: includes/Widgets/TSM_Control_Builder.php:467
+#: includes/Widgets/TSM_Control_Builder.php:550
+msgid "Normal"
+msgstr "Normal"
+
+#: includes/Widgets/TSM_Control_Builder.php:286
+#: includes/Widgets/TSM_Control_Builder.php:372
+#: includes/Widgets/TSM_Control_Builder.php:487
+#: includes/Widgets/TSM_Control_Builder.php:568
+msgid "Hover"
+msgstr "Hover"
+
+#: includes/Widgets/TSM_Control_Builder.php:293
+msgid "Background Color (Hover)"
+msgstr "Color de fondo (hover)"
+
+#: includes/Widgets/TSM_Control_Builder.php:317
+msgid "Border Options"
+msgstr "Opciones de borde"
+
+#: includes/Widgets/TSM_Control_Builder.php:359
+msgid "Border Color"
+msgstr "Color del borde"
+
+#: includes/Widgets/TSM_Control_Builder.php:379
+msgid "Border Color (Hover)"
+msgstr "Color del borde (hover)"
+
+#: includes/Widgets/TSM_Control_Builder.php:403
+msgid "Dimensions Options"
+msgstr "Opciones de dimensiones"
+
+#: includes/Widgets/TSM_Control_Builder.php:445
+msgid "Typography Options"
+msgstr "Tipografía"
+
+#: includes/Widgets/TSM_Control_Builder.php:474
+msgid "Text Color"
+msgstr "Color del texto"
+
+#: includes/Widgets/TSM_Control_Builder.php:494
+msgid "Text Color (Hover)"
+msgstr "Color del texto (hover)"
+
+#: includes/Widgets/TSM_Control_Builder.php:511
+msgid "Text Align"
+msgstr "Alineado del texto"
+
+#: includes/Widgets/TSM_Control_Builder.php:515
+msgid "Left"
+msgstr "Izquierda"
+
+#: includes/Widgets/TSM_Control_Builder.php:516
+msgid "Center"
+msgstr "Centro"
+
+#: includes/Widgets/TSM_Control_Builder.php:517
+msgid "Right"
+msgstr "Derecha"
+
+#: includes/Widgets/TSM_Control_Builder.php:537
+msgid "Shadow Options"
+msgstr "Opciones de sombreado"
+
+#: includes/Widgets/TSM_Control_Builder.php:558
+msgid "Box Shadow"
+msgstr "Sombreado"
+
+#: includes/Widgets/TSM_Control_Builder.php:576
+msgid "Box Shadow (Hover)"
+msgstr "Sombreado (hover)"
 
 #: tsm_templates/af-admin-function-example-fields.php:5
 #: tsm_templates/af-admin-function-example-fields.php:19
 msgid "Example use"
 msgstr "Ejemplo de uso"
-
-#: tsm_templates/af-appsheet-functions-main.php:24
-msgid "Category"
-msgstr "Categoría"
 
 #: tsm_templates/af-appsheet-functions-main.php:44
 msgid "Show results"
@@ -502,6 +703,9 @@ msgstr "¡Esta expresión no tiene ejemplos!"
 #: tsm_templates/af-explanation-error.php:1
 msgid "This function does not have an explanation!"
 msgstr "¡Esta expresión no tiene explicación!"
+
+#~ msgid "Query"
+#~ msgstr "Consulta"
 
 #~ msgid "Appsheet Functions List"
 #~ msgstr "Lista de expresiones de Appsheet"
@@ -546,9 +750,6 @@ msgstr "¡Esta expresión no tiene explicación!"
 #~ "Plugin for the management of Appsheet Functions and examples of their uses"
 #~ msgstr ""
 #~ "Plugin para la gestión de Expresiones AppSheet y ejemplos de sus usos"
-
-#~ msgid "Category: "
-#~ msgstr "Categoría: "
 
 #~ msgid "Appsheet Functions Searchbar"
 #~ msgstr "Barra de búsqueda de Expresiones AppSheet"
