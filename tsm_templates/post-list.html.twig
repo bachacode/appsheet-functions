@@ -1,9 +1,9 @@
 <div class="tsm-main__wrapper">
-	<div class="tsm-container" x-data="postList_{{ unique_id }}()">
+	<div class="tsm-container">
 		{# Sidebar #}
 		<div class="tsm-sidebar">
 			<div class="tsm-post-count">
-				<strong x-text="filteredPosts.length">{{ posts|length }}</strong> resultados.
+				<strong>{{ posts|length }}</strong> resultados.
 			</div>
 
 			{% if categories != [] %}
@@ -16,8 +16,7 @@
 							<input 
 								type="checkbox" 
 								class="tsm-categories-list__checkbox" 
-								@click="filterByCategory('{{ term.slug }}')"
-								:checked="selectedCategories.has('{{ term.slug }}')"
+								data-category="{{ term.slug }}"
 							>
 							<span class="tsm-categories-list__name">{{ term.name }}</span>
 						</label>
@@ -35,14 +34,13 @@
 					<input 
 						type="text" 
 						class="tsm-search-input" 
-						placeholder="{{ settings.tsm_search_placeholder }}" 
-						x-model="searchQuery"
+						placeholder="{{ settings.tsm_search_placeholder }}"
 					>
 					<i class="fas fa-search tsm-search-icon"></i>
 				</div>
 			</div>
 
-			<div class="tsm-post-list__wrapper" x-ref="postsContainer">
+			<div class="tsm-post-list__wrapper">
 				{% for post in posts %}
 					<div class="tsm-post-list-element" data-terms='{{ post.terms|json_encode }}' data-taxonomies='{{ post.taxonomies|json_encode }}'>
 						{% if settings.tsm_post_list_whole_post_linkable == 'yes' %}
@@ -87,57 +85,4 @@
 			</div>
 		</div>
 	</div>
-</div>
-
-<script>
-function postList_{{ unique_id }}() {
-	return {
-		posts: {{ posts|json_encode|raw }},
-		settings: {{ settings|json_encode|raw }},
-		searchQuery: '',
-		selectedCategories: new Set(),
-		
-		init() {
-			// Watch for changes in search query
-			this.$watch('searchQuery', () => this.filterPosts());
-		},
-
-		get filteredPosts() {
-			const query = this.searchQuery.toLowerCase();
-			return this.posts.filter(post => {
-				const matchesSearch = post.title.toLowerCase().includes(query);
-				const matchesCategory = this.selectedCategories.size === 0 || 
-					post.taxonomy_slugs.some(slug => this.selectedCategories.has(slug));
-				return matchesSearch && matchesCategory;
-			});
-		},
-		
-		filterPosts() {
-			const posts = this.$refs.postsContainer.querySelectorAll('.tsm-post-list-element');
-			const query = this.searchQuery.toLowerCase();
-			
-			posts.forEach(post => {
-				const title = post.querySelector('.tsm-content-title')?.textContent.toLowerCase() || '';
-				const terms = JSON.parse(post.getAttribute('data-terms'));
-				
-				const matchesSearch = title.includes(query);
-				const matchesCategory = this.selectedCategories.size === 0 || 
-					terms.some(term => this.selectedCategories.has(term));
-				
-				post.style.display = (matchesSearch && matchesCategory) ? '' : 'none';
-			});
-		},
-
-		filterByCategory(category) {
-			// Toggle category in Set
-			if (this.selectedCategories.has(category)) {
-				this.selectedCategories.delete(category);
-			} else {
-				this.selectedCategories.add(category);
-			}
-			
-			this.filterPosts();
-		}
-	}
-}
-</script> 
+</div> 
