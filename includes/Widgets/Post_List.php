@@ -711,13 +711,9 @@ class Post_List extends TSM_Widget_Base
     protected function render()
     {
         // Enqueue Alpine.js
-        wp_enqueue_script(
-            'tailorsheet-manager-alpinejs',
-            'https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js',
-            [],
-            '3.x.x',
-            true
-        );
+        wp_enqueue_script('tailorsheet-manager-alpinejs',);
+        wp_enqueue_style('tsm-post-list-css', Helpers::public_assets('css/post-list.css'), array(), '1.0.0', 'all');
+        
 
         $settings = $this->get_settings_for_display();
         
