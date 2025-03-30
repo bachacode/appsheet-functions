@@ -21,6 +21,9 @@ Custom Elementor Widgets handmade to display AppSheet Functions and their exampl
 
 == Changelog ==
 
+= 2.7.1 =
+* Streamline Post List widget initialization by moving style and script enqueuing to the constructor, and remove redundant CSS rules for improved clarity
+
 = 2.7.0 =
 * Added twig as template engine
 * Added new helpers static functions for twig template rendering
