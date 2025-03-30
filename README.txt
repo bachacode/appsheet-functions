@@ -21,6 +21,29 @@ Custom Elementor Widgets handmade to display AppSheet Functions and their exampl
 
 == Changelog ==
 
+= 2.7.0 =
+* Added twig as template engine
+* Added new helpers static functions for twig template rendering
+* Renamed AppSheet Functions List widget to Post List
+* Fixed route of enqueue styles and scripts of select2 library
+* Fixed relative path to textdomain locales
+* Updated template directory path and disabled caching in Twig initialization
+* Added AlpineJS script registration to Frontend_Handler
+* Introduced TSM_Control_Builder class for streamlined Elementor control registration
+* Enhanced TSM_Widget_Base with generic section and control registration methods
+* Implement Post List widget with customizable controls and new template rendering
+* Enhance Post List widget with responsive controls, shadow options, and improved template rendering using Jquery
+* Update post list template to use server-side rendering for improved performance and readability
+* Add search functionality to Post List widget with customizable placeholder and responsive styling
+* Rename CSS classes from .af-main__wrapper to .tsm-main__wrapper for consistency and update related styles in templates
+* Add 'Make Whole Post Linkable' control to Post List widget and refactor related CSS classes for improved structure
+* Enhance Post List widget with new taxonomy filtering options and improved sidebar layout for better user experience
+* Add styling controls for post count and categories list in Post List widget, enhancing customization options
+* Improve Post List widget layout with additional styling for content wrappers and overflow handling
+* Introduce dedicated CSS file for Post List widget, enhancing layout and styling consistency across components
+* Implement JavaScript functionality for Post List widget, enabling search and category filtering capabilities
+* Updated version to 2.7.0 and refresh language files for improved translations and new features
+
 = 2.6.0 =
 * Changed naming from Public to Frontend
 
